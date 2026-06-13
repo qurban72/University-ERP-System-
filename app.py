@@ -1205,9 +1205,10 @@ def main():
     # Footer
     st.markdown(f"""
         <div class='footer'>
-            <p><strong>CBT Examination Analytics Dashboard | Enterprise Edition</strong></p>
-            <p>Data Science Team 1 - Academic Analytics & Business Intelligence</p>
-            <p style='font-size: 0.8rem;'>© 2024 University ERP | Version 2.0 | Powered by AI & Machine Learning</p>
+           <p><strong>📊 Technify University ERP | Academic Analytics & Business Intelligence</strong></p>
+            <p>Data Science Team 1 | Syeda Samia</p>
+            <p style='font-size: 0.8rem;'>🎯 Empowering data-driven decisions for university management</p>
+            <p style='font-size: 0.75rem; color: #a8c4d8;'>© 2026 Technify | Insights for Excellence</p>
         </div>
     """, unsafe_allow_html=True)
 
