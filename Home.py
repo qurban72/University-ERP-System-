@@ -1,9 +1,9 @@
 import streamlit as st
 
-# Page configuration
+# 1. PAGE CONFIGURATION
 st.set_page_config(
     page_title="Technify University ERP",
-    page_icon="🏛️",
+    page_icon="🎓",  
     layout="wide"
 )
 
@@ -12,11 +12,20 @@ st.markdown("""
     <style>
     .main-header {
         text-align: center;
-        padding: 1rem;
+        padding: 2rem 1rem;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         border-radius: 10px;
         color: white;
         margin-bottom: 2rem;
+    }
+    /* Logo ko responsive aur clear rakhne ke liye extra styling */
+    .header-logo {
+        max-width: 220px;
+        height: auto;
+        margin-bottom: 1.2rem;
+        background: rgba(255, 255, 255, 0.15); /* Logo ke peeche light background */
+        padding: 10px 20px;
+        border-radius: 8px;
     }
     .dashboard-card {
         background: #f8f9fa;
@@ -28,11 +37,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Header
+# 2. MAIN HEADER (Technify Official Logo Link Added)
 st.markdown("""
     <div class="main-header">
-        <h1>🏛️ Technify University ERP System</h1>
-        <h3>Academic Analytics & Business Intelligence Dashboard</h3>
+        <img src="https://www.technifyltd.com/wp-content/uploads/2024/03/cropped-technify-Logo-1.png" class="header-logo">
+        <h1 style="margin: 0; font-size: 2.2rem; font-weight: 700;">University ERP System</h1>
+        <h3 style="margin-top: 0.5rem; opacity: 0.9; font-weight: 400;">Academic Analytics & Business Intelligence Dashboard</h3>
     </div>
 """, unsafe_allow_html=True)
 
