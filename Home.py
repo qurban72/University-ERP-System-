@@ -74,7 +74,7 @@ st.markdown("""
 st.markdown(f"""
     <div class="main-header">
         <img src="{logo_html_src}" class="header-logo">
-        <h1 style="margin: 0; font-size: 2.3rem; font-weight: 700; letter-spacing: 0.5px;">University ERP System</h1>
+        <h1 style="margin: 0; font-size: 2.3rem; font-weight: 700; letter-spacing: 0.5px;">Technify ERP System</h1>
         <h3 style="margin-top: 0.5rem; opacity: 0.85; font-weight: 400; font-size: 1.2rem;">Academic Analytics & Business Intelligence Dashboard</h3>
     </div>
 """, unsafe_allow_html=True)
