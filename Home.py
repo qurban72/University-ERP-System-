@@ -1,31 +1,57 @@
 import streamlit as st
+import base64
+import os
 
+# ============================================================================
 # 1. PAGE CONFIGURATION
+# ============================================================================
 st.set_page_config(
     page_title="Technify University ERP",
     page_icon="🎓",  
     layout="wide"
 )
 
-# Custom CSS for better styling
+# ============================================================================
+# 2. IMAGE PROCESSING (For 100% Guaranteed Logo Loading)
+# ============================================================================
+def get_base64_image(img_path):
+    if os.path.exists(img_path):
+        with open(img_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    return ""
+
+# 'logo.png' ko read karne ki koshish karein
+logo_base64 = get_base64_image("logo.png")
+
+if logo_base64:
+    # Local Image Source
+    logo_html_src = f"data:image/png;base64,{logo_base64}"
+else:
+    # Live URL Fallback (Backup agar file project folder mein na mile)
+    logo_html_src = "https://technifyltd.com/wp-content/uploads/2024/03/technify-Logo-1.png"
+
+# ============================================================================
+# 3. CUSTOM CSS FOR THEME & LAYOUT
+# ============================================================================
 st.markdown("""
     <style>
     .main-header {
         text-align: center;
-        padding: 2rem 1rem;
+        padding: 2.5rem 1rem;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 10px;
+        border-radius: 12px;
         color: white;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    /* Logo ko responsive aur clear rakhne ke liye extra styling */
     .header-logo {
-        max-width: 220px;
+        max-width: 240px;
         height: auto;
         margin-bottom: 1.2rem;
-        background: rgba(255, 255, 255, 0.15); /* Logo ke peeche light background */
-        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 12px 25px;
         border-radius: 8px;
+        display: inline-block;
     }
     .dashboard-card {
         background: #f8f9fa;
@@ -33,20 +59,29 @@ st.markdown("""
         border-radius: 10px;
         border-left: 4px solid #667eea;
         margin-bottom: 1rem;
+        transition: transform 0.2s;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
     </style>
 """, unsafe_allow_html=True)
 
-# 2. MAIN HEADER (Technify Official Logo Link Added)
-st.markdown("""
+# ============================================================================
+# 4. BRANDED MAIN HEADER UI
+# ============================================================================
+st.markdown(f"""
     <div class="main-header">
-        <img src="https://www.technifyltd.com/wp-content/uploads/2024/03/cropped-technify-Logo-1.png" class="header-logo">
-        <h1 style="margin: 0; font-size: 2.2rem; font-weight: 700;">University ERP System</h1>
-        <h3 style="margin-top: 0.5rem; opacity: 0.9; font-weight: 400;">Academic Analytics & Business Intelligence Dashboard</h3>
+        <img src="{logo_html_src}" class="header-logo">
+        <h1 style="margin: 0; font-size: 2.3rem; font-weight: 700; letter-spacing: 0.5px;">University ERP System</h1>
+        <h3 style="margin-top: 0.5rem; opacity: 0.85; font-weight: 400; font-size: 1.2rem;">Academic Analytics & Business Intelligence Dashboard</h3>
     </div>
 """, unsafe_allow_html=True)
 
-# Key Metrics Row
+# ============================================================================
+# 5. KEY INSTUTIONAL METRICS
+# ============================================================================
 st.subheader("📊 University at a Glance")
 
 col1, col2, col3, col4 = st.columns(4)
@@ -85,10 +120,12 @@ with col4:
 
 st.markdown("---")
 
-# Dashboard Navigation
+# ============================================================================
+# 6. DASHBOARD NAVIGATION GATEWAY
+# ============================================================================
 st.subheader("📊 Select a Dashboard to Explore")
 
-# Row 1: First 3 dashboards
+# Row 1: Student, Attendance, Examination
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -139,7 +176,7 @@ with col3:
     if st.button("📊 Open Examination Dashboard", key="btn_exam", use_container_width=True):
         st.switch_page("pages/03_Examination_Analytics.py")
 
-# Row 2: Next 3 dashboards
+# Row 2: Result, Finance, Executive
 col4, col5, col6 = st.columns(3)
 
 with col4:
@@ -192,19 +229,21 @@ with col6:
 
 st.markdown("---")
 
-# Recent Updates / Notifications
+# ============================================================================
+# 7. BULLETIN BOARD & ACTIONS
+# ============================================================================
 st.subheader("📢 Recent Updates")
 
-col1, col2 = st.columns(2)
+col_news, col_actions = st.columns(2)
 
-with col1:
+with col_news:
     with st.expander("📌 University News", expanded=True):
         st.info("✅ New semester registration is now open")
         st.info("📈 Finance report for Q4 2025 is available")
         st.info("📋 Attendance policy has been updated")
         st.info("📝 Examination schedule published")
 
-with col2:
+with col_actions:
     with st.expander("⚡ Quick Actions", expanded=True):
         st.success("📊 View all dashboards from sidebar")
         st.success("🔍 Use filters for specific data")
@@ -213,10 +252,12 @@ with col2:
 
 st.markdown("---")
 
-# Footer
+# ============================================================================
+# 8. FOOTER ARCHITECTURE
+# ============================================================================
 st.markdown("""
     <div style="text-align: center; color: #666; padding: 1rem;">
-        <p>🏛️ Technify University ERP System v1.0 | Academic Analytics & Business Intelligence</p>
+        <p> Technify University ERP System v1.0 | Academic Analytics & Business Intelligence</p>
         <p style="font-size: 0.8rem;">Last Updated: June 2026 | Data refreshed daily</p>
     </div>
 """, unsafe_allow_html=True)
