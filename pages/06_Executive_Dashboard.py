@@ -338,7 +338,7 @@ def main():
                 y='gpa',
                 color='department',
                 size='fee_allocated',
-                color_discrete_sequence=px.colors.pastel.Pastel,  # ❌ Yeh galat hai
+                color_discrete_sequence=px.colors.qualitative.Pastel,  #  Yeh bilkul sahi hai
                 labels={'attendance': 'Attendance (%)', 'gpa': 'Student Cumulative GPA'},
                 opacity=0.6
             )
