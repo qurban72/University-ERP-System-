@@ -33,41 +33,96 @@ else:
 # ============================================================================
 # 3. CUSTOM CSS FOR THEME & LAYOUT
 # ============================================================================
+# Custom CSS for Premium Modern Executive Styling
 st.markdown("""
     <style>
+    /* Main Banner Container - Premium Glassmorphism Look */
     .main-header {
         text-align: center;
-        padding: 2.5rem 1rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 12px;
+        padding: 3.5rem 2rem;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        border-radius: 20px;
         color: white;
         margin-bottom: 2.5rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(30, 60, 114, 0.2);
+        position: relative;
+        overflow: hidden;
     }
+    
+    /* Subtle tech pattern overlay effect */
+    .main-header::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    /* Logo Container - Boxy look khatam karne ke liye */
     .header-logo {
-        max-width: 240px;
+        max-width: 160px;
         height: auto;
-        margin-bottom: 1.2rem;
-        background: rgba(255, 255, 255, 0.15);
-        padding: 12px 25px;
-        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px;
+        border-radius: 50%; /* Pure square box ko round circle mein badal diya */
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2), inset 0 0 10px rgba(0,0,0,0.05);
         display: inline-block;
+        transition: transform 0.4s ease;
     }
+    
+    .header-logo:hover {
+        transform: scale(1.05) rotate(2deg);
+    }
+
+    /* Professional Typography */
+    .header-title {
+        margin: 0; 
+        font-size: 2.8rem; 
+        font-weight: 800; 
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+    
+    .header-subtitle {
+        margin-top: 0.7rem; 
+        opacity: 0.85; 
+        font-weight: 400; 
+        font-size: 1.25rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.95rem;
+        border-top: 1px solid rgba(255,255,255,0.2);
+        display: inline-block;
+        padding-top: 0.7rem;
+    }
+
+    /* Dashboard Grid Cards Layout Upgrade */
     .dashboard-card {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 10px;
-        border-left: 4px solid #667eea;
-        margin-bottom: 1rem;
-        transition: transform 0.2s;
+        background: #ffffff;
+        padding: 1.8rem;
+        border-radius: 16px;
+        border-top: 4px solid #2a5298; /* Border side se hata kar top par lagayi deep blue corporate look ke liye */
+        margin-bottom: 1.2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     .dashboard-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.08);
     }
     </style>
 """, unsafe_allow_html=True)
 
+# Branded Main Header UI HTML
+st.markdown(f"""
+    <div class="main-header">
+        <img src="{logo_html_src}" class="header-logo">
+        <h1 class="header-title">Technify ERP System</h1>
+        <div class="header-subtitle">Academic Analytics & Business Intelligence Dashboard</div>
+    </div>
+""", unsafe_allow_html=True)
 # ============================================================================
 # 4. BRANDED MAIN HEADER UI
 # ============================================================================
