@@ -229,20 +229,31 @@ def load_finance_data():
 with st.spinner("⏳ Loading financial records from Supabase..."):
     payments, students, departments = load_finance_data()
 
-# ── DYNAMIC COLUMN MAPPING FIX ──────────────────────────────────
-# Agar database mein amount_paid ka naam thoda mukhtalif hai toh handle karein
+# ── DYNAMIC COLUMN MAPPING FIX (AMOUNT & STATUS) ──────────────────
+# Amount column auto-mapping
 if 'amount_paid' not in payments.columns:
     for col in ['amount', 'fee_paid', 'amountpaid', 'total_amount']:
         if col in payments.columns:
             payments = payments.rename(columns={col: 'amount_paid'})
             break
 
+# Status column auto-mapping (Fixes KeyError 'status')
+if 'status' not in payments.columns:
+    for col in ['payment_status', 'paymentstatus', 'invoice_status', 'state']:
+        if col in payments.columns:
+            payments = payments.rename(columns={col: 'status'})
+            break
+
+# Fallback agar phir bhi column nahi milta
+if 'status' not in payments.columns:
+    payments['status'] = 'Paid'
+
 # Payment Date parsing safely
 if 'payment_date' in payments.columns:
     payments['payment_date'] = pd.to_datetime(payments['payment_date'])
     payments['month_year'] = payments['payment_date'].dt.to_period('M').astype(str)
 else:
-    payments['month_year'] = "2026-06" # Fallback trend scale
+    payments['month_year'] = "2026-06"
 
 # Tables join karna architecture ke mutabiq
 f_df = payments.merge(students[['student_id', 'name', 'department_id', 'semester']], on="student_id", how="left")
@@ -252,7 +263,7 @@ f_df = f_df.merge(departments[['department_id', 'department_name']], on="departm
 if 'amount_paid' in f_df.columns:
     f_df['amount_paid'] = f_df['amount_paid'].fillna(0)
 else:
-    f_df['amount_paid'] = 0 # Emergency safety fallback
+    f_df['amount_paid'] = 0
 
 # ── BANNER ──────────────────────────────────────────────────────
 st.markdown("""
@@ -278,6 +289,7 @@ with fc2:
     s_opts = ['All Semesters'] + [f"Semester {int(s)}" for s in sorted(students['semester'].dropna().unique().tolist())]
     sel_s  = st.selectbox("📅 Semester Filter", s_opts)
 with fc3:
+    # Ab 'status' safely accessible hai bina custom crash ke
     status_opts = ['All Statuses'] + sorted(payments['status'].dropna().unique().tolist())
     sel_status  = st.selectbox("💳 Payment Status", status_opts)
 st.markdown('</div>', unsafe_allow_html=True)
@@ -371,7 +383,7 @@ with c2:
                            legend=dict(orientation='h', y=-0.1, font=dict(size=12)))
         st.plotly_chart(fig2, use_container_width=True)
     else:
-        st.info("No status matrices.")
+        st.info("No status matrices available.")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ── ROW 2: DEPARTMENTAL REVENUE & FEE METHOD TYPE ─────────────────
