@@ -628,4 +628,91 @@ def main():
     # VIEW MAPPING
     # ============================================================================
     if selected == "Dashboard":
-        col1, col2, col3, col4 = st.columns(
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.markdown(f"<div class='metric-card'><h3>📊 Total Enrollments</h3><h2>{len(filtered_df):,}</h2><p>Active Datasets</p></div>", unsafe_allow_html=True)
+        with col2:
+            st.markdown(f"<div class='metric-card'><h3>📈 Average Score</h3><h2>{metrics['avg_marks']:.1f}</h2><p>Class Matrix Median</p></div>", unsafe_allow_html=True)
+        with col3:
+            st.markdown(f"<div class='metric-card'><h3>🟢 Pass Rate</h3><h2>{metrics['pass_rate']:.1f}%</h2><p>Base Threshold: 75%</p></div>", unsafe_allow_html=True)
+        with col4:
+            color = "#a8e6cf" if perf_score >= 75 else "#fff8e7" if perf_score >= 60 else "#ffe6f0"
+            st.markdown(f"""
+                <div class='metric-card' style='border-top: 4px solid {color};'>
+                    <h3>🎯 Overall Performance</h3>
+                    <h2 style='color: #2c5f8a !important;'>{perf_score:.1f}</h2>
+                    <p>Calculated index ranking</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        st.markdown("### 🚨 Live Action Logs")
+        alerts = create_alert_system(filtered_df)
+        if alerts:
+            for icon, title, msg, level in alerts:
+                if level == "high": st.error(f"{icon} **{title}**: {msg}")
+                else: st.warning(f"{icon} **{title}**: {msg}")
+        else:
+            st.success("✅ Operational statuses remain fully within baseline pastel bounds.")
+
+        g1, g2 = st.columns(2)
+        with g1:
+            st.plotly_chart(create_advanced_donut_chart(filtered_df), use_container_width=True)
+        with g2:
+            st.plotly_chart(create_box_plot(filtered_df), use_container_width=True)
+
+    elif selected == "Course Analytics":
+        st.subheader("📚 Subject Performance Mapping")
+        course_summary = filtered_df.groupby('course_name').agg({
+            'student_id': 'count', 'marks': ['mean', 'max', 'min']
+        }).reset_index()
+        course_summary.columns = ['Course', 'Students', 'Average', 'Highest', 'Lowest']
+        
+        st.dataframe(course_summary.style.background_gradient(cmap='Pastel1', subset=['Average']), use_container_width=True)
+        
+        fig_bar = px.bar(course_summary.sort_values(by='Average', ascending=False).head(15), 
+                         x='Course', y='Average', color='Average',
+                         color_continuous_scale=['#b8dff0', '#7acce0', '#a8e6cf'], 
+                         title="Top Performance Matrix per Evaluation Module")
+        fig_bar.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#5a7d9a')
+        st.plotly_chart(fig_bar, use_container_width=True)
+
+    elif selected == "Department Insights":
+        st.subheader("🏢 Cross-Departmental Matrix Evaluation")
+        d1, d2 = st.columns(2)
+        with d1:
+            st.plotly_chart(create_radar_chart(filtered_df), use_container_width=True)
+        with d2:
+            st.plotly_chart(create_trend_analysis(filtered_df), use_container_width=True)
+
+    elif selected == "Predictive Analytics":
+        st.subheader("🔮 Predictive Diagnostics & Trend Projections")
+        p1, p2 = st.columns([2, 1])
+        with p1:
+            fig_pred, forecast, trend = create_performance_prediction(filtered_df)
+            st.plotly_chart(fig_pred, use_container_width=True)
+        with p2:
+            st.plotly_chart(create_gauge_chart(forecast, "Next Sem Target Forecast"), use_container_width=True)
+            if trend < 0:
+                st.error(f"📉 Shift trajectory sliding by negative {abs(trend):.2f} units.")
+            else:
+                st.success(f"📈 Trajectory target showing positive growth value: +{trend:.2f}")
+
+    elif selected == "Reports":
+        st.subheader("📋 Structural Data Extraction Matrix")
+        st.dataframe(filtered_df.head(100), use_container_width=True)
+        
+        csv = filtered_df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Export Filtered Dataset as CSV",
+            data=csv, file_name='CBT_Pastel_Export.csv', mime='text/csv',
+            use_container_width=True
+        )
+
+    st.markdown("""
+        <div class='footer'>
+            <p><strong>CBT Examination Analytics Platform</strong> | Powered by Streamlit & Premium Pastel UI Engine</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+if __name__ == "__main__":
+    main()
