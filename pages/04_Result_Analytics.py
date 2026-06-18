@@ -450,10 +450,15 @@ with c6:
         textfont=dict(color='#0f172a', size=12),
         hovertemplate='<b>%{y}</b><br>CGPA: %{x}<extra></extra>'
     ))
-    fig6.update_layout(**LAY, height=340,
-                       xaxis=dict(range=[0,4.8], title='CGPA', **GRD),
-                       yaxis=dict(title='', **GRD))
-    fig6.update_yaxis(autorange="reversed")
+    
+    # yaxis ki autorange ko direct layout dictionary ke andar fix kar diya gaya hai
+    fig6.update_layout(
+        **LAY, 
+        height=340,
+        xaxis=dict(range=[0,4.8], title='CGPA', **GRD),
+        yaxis=dict(title='', autorange="reversed", **GRD)  # <-- Fixed here
+    )
+    
     st.plotly_chart(fig6, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
