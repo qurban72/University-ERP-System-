@@ -13,7 +13,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800;900&display=swap');
 
     html, body, [class*="css"], .stApp {
         font-family: 'Inter', sans-serif !important;
@@ -227,14 +227,26 @@ def load():
 with st.spinner("⏳ Loading data from Supabase..."):
     results, students, departments, programs, enrollments, exams = load()
 
-# ── MERGE ───────────────────────────────────────────────────────
+# ── MERGE & CLEAN ───────────────────────────────────────────────
 df = results.merge(enrollments, on="enrollment_id", how="left")
 df = df.merge(students[['student_id','name','department_id','program_id','semester','cgpa','status']], on="student_id", how="left")
 df = df.merge(departments, on="department_id", how="left")
 df = df.merge(programs[['program_id','program_name','degree_level']], on="program_id", how="left")
 df = df.merge(exams[['exam_id','exam_type','total_marks']], on="exam_id", how="left")
+
+# Data preparation fixes
 df['percentage'] = (df['marks_obtained'] / df['total_marks']) * 100
 df['pass_fail']  = df['percentage'].apply(lambda x: 'Pass' if x >= 50 else 'Fail')
+
+def assign_grade(pct):
+    if pct >= 80: return 'A'
+    elif pct >= 70: return 'B'
+    elif pct >= 60: return 'C'
+    elif pct >= 50: return 'D'
+    else: return 'F'
+
+if 'grade' not in df.columns:
+    df['grade'] = df['percentage'].apply(assign_grade)
 
 # ── BANNER ──────────────────────────────────────────────────────
 st.markdown("""
@@ -257,7 +269,7 @@ with fc1:
     d_opts = ['All Departments'] + sorted(departments['department_name'].dropna().tolist())
     sel_d  = st.selectbox("🏛️ Filter by Department", d_opts)
 with fc2:
-    s_opts = ['All Semesters'] + [f"Semester {s}" for s in sorted(df['semester_x'].dropna().unique().tolist())]
+    s_opts = ['All Semesters'] + [f"Semester {int(s)}" for s in sorted(df['semester'].dropna().unique().tolist())]
     sel_s  = st.selectbox("📅 Filter by Semester", s_opts)
 with fc3:
     e_opts = ['All Exam Types'] + sorted(df['exam_type'].dropna().unique().tolist())
@@ -268,14 +280,14 @@ fdf = df.copy()
 if sel_d != 'All Departments':
     fdf = fdf[fdf['department_name'] == sel_d]
 if sel_s != 'All Semesters':
-    fdf = fdf[fdf['semester_x'] == int(sel_s.split()[1])]
+    fdf = fdf[fdf['semester'] == int(sel_s.split()[1])]
 if sel_e != 'All Exam Types':
     fdf = fdf[fdf['exam_type'] == sel_e]
 
 # ── KPIs ────────────────────────────────────────────────────────
 total_stu   = fdf['student_id'].nunique()
-avg_marks   = fdf['percentage'].mean()
-pass_rate   = (fdf['pass_fail'] == 'Pass').mean() * 100
+avg_marks   = fdf['percentage'].mean() if not fdf.empty else 0
+pass_rate   = (fdf['pass_fail'] == 'Pass').mean() * 100 if not fdf.empty else 0
 fail_rate   = 100 - pass_rate
 avg_cgpa    = students['cgpa'].mean()
 top_scorers = fdf[fdf['percentage'] >= 80]['student_id'].nunique()
@@ -378,7 +390,7 @@ c3, c4 = st.columns(2)
 with c3:
     st.markdown('<div class="ch-card">', unsafe_allow_html=True)
     st.markdown('<div class="sec-hdr">📈 Semester-wise Avg Score</div>', unsafe_allow_html=True)
-    sp = fdf.groupby('semester_x')['percentage'].mean().reset_index()
+    sp = fdf.groupby('semester')['percentage'].mean().reset_index()
     sp.columns = ['Semester','Avg Score']
     sp = sp.sort_values('Semester')
     fig3 = px.line(sp, x='Semester', y='Avg Score', markers=True,
@@ -425,7 +437,6 @@ with c5:
     all_grades   = ['A','B','C','D','F']
     gc = fdf['grade'].value_counts().reset_index()
     gc.columns = ['Grade','Count']
-    # Make sure all grades always present to avoid layout jump
     gc = pd.DataFrame({'Grade': all_grades}).merge(gc, on='Grade', how='left').fillna(0)
     gc = gc[gc['Count'] > 0]
     fig5 = go.Figure(go.Pie(
@@ -467,6 +478,7 @@ with c6:
                        xaxis=dict(range=[0,4.8], title='CGPA',
                                   title_font=dict(size=13), tickfont=dict(size=12), **GRD),
                        yaxis=dict(title='', tickfont=dict(size=12), **GRD))
+    fig6.update_yaxis(autorange="reversed") # Places Rank 1 at the top
     st.plotly_chart(fig6, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
