@@ -11,22 +11,22 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ── THEME & FONT REPLICATION (FROM PAGE 1 & 2) ──────────────────
+# ── LIGHT THEME & FONT REPLICATION (FROM PAGE 1 & 2) ──────────────────
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
     html, body, [class*="css"], .stApp {
         font-family: 'Inter', sans-serif !important;
-        background-color: #0a0d14 !important;
-        color: #e2e8f0 !important;
+        background-color: #f8fafc !important; /* Light background */
+        color: #0f172a !important; /* Dark text */
     }
     .block-container {
         padding: 2rem 2.5rem 1rem 2.5rem !important;
         max-width: 100% !important;
     }
 
-    /* Streamlit element spacing optimization */
+    /* Spacing optimization */
     .element-container { margin-bottom: 0 !important; padding-bottom: 0 !important; }
     .stPlotlyChart { margin-bottom: 0 !important; }
     div[data-testid="stVerticalBlock"] > div { gap: 0px !important; }
@@ -34,25 +34,26 @@ st.markdown("""
 
     /* ── BANNER ── */
     .top-banner {
-        background: linear-gradient(135deg, #1a1f35 0%, #141828 100%);
-        border: 1px solid #2a3060;
-        border-radius: 16px;
+        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
         padding: 32px 40px 28px 40px;
         margin-bottom: 20px;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
     }
     .top-banner::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
+        background: linear-gradient(90deg, #4f46e5, #7c3aed, #0891b2);
     }
     .banner-label {
         font-size: 0.82rem;
         font-weight: 700;
-        color: #6366f1;
+        color: #4f46e5;
         letter-spacing: 0.15em;
         text-transform: uppercase;
         margin-bottom: 10px;
@@ -60,26 +61,26 @@ st.markdown("""
     .banner-title {
         font-size: 2.4rem;
         font-weight: 800;
-        color: #f1f5f9;
+        color: #0f172a;
         line-height: 1.1;
         margin-bottom: 8px;
     }
     .banner-title span {
-        background: linear-gradient(90deg, #818cf8, #06b6d4);
+        background: linear-gradient(90deg, #4f46e5, #06b6d4);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
     .banner-sub {
         font-size: 0.95rem;
-        color: #94a3b8;
+        color: #475569;
         font-weight: 400;
         margin-bottom: 14px;
     }
     .banner-badge {
         display: inline-block;
-        background: rgba(99,102,241,0.15);
-        border: 1px solid rgba(99,102,241,0.35);
-        color: #818cf8;
+        background: rgba(79, 70, 229, 0.08);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        color: #4f46e5;
         padding: 4px 14px;
         border-radius: 20px;
         font-size: 0.75rem;
@@ -95,21 +96,23 @@ st.markdown("""
         margin-bottom: 20px;
     }
     .kpi-card {
-        background: linear-gradient(145deg, #141828, #1a1f35);
-        border: 1px solid #1e2540;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 22px 14px 18px 14px;
         text-align: center;
-        transition: border-color 0.3s ease;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+        transition: transform 0.2s ease, border-color 0.2s ease;
     }
     .kpi-card:hover {
-        border-color: #2a3060;
+        border-color: #cbd5e1;
+        transform: translateY(-1px);
     }
     .kpi-icon { font-size: 1.3rem; margin-bottom: 8px; display:block; }
     .kpi-value {
         font-size: 1.8rem;
         font-weight: 800;
-        color: #f1f5f9;
+        color: #0f172a;
         line-height: 1;
         margin-bottom: 6px;
         display: block;
@@ -125,70 +128,72 @@ st.markdown("""
 
     /* ── FILTER BAR ── */
     .filter-wrap {
-        background: #141828;
-        border: 1px solid #1e2540;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 16px 20px 12px 20px;
         margin-bottom: 20px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
     }
     .stSelectbox label {
-        color: #94a3b8 !important;
+        color: #475569 !important;
         font-size: 0.8rem !important;
         font-weight: 600 !important;
         margin-bottom: 4px !important;
     }
     .stSelectbox > div > div {
-        background-color: #1a1f35 !important;
-        border-color: #2a3060 !important;
-        color: #e2e8f0 !important;
+        background-color: #f8fafc !important;
+        border-color: #cbd5e1 !important;
+        color: #0f172a !important;
         border-radius: 8px !important;
     }
 
     /* ── CHART CARDS ── */
     .ch-card {
-        background: #111624;
-        border: 1px solid #1e2540;
-        border-radius: 14px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
         padding: 20px 18px 12px 18px;
         margin-bottom: 16px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
     }
 
     /* ── SECTION HEADER ── */
     .sec-hdr {
         font-size: 0.95rem;
         font-weight: 700;
-        color: #f1f5f9;
+        color: #0f172a;
         margin-bottom: 14px;
         padding-bottom: 8px;
-        border-bottom: 1px solid #2a3060;
+        border-bottom: 1px solid #e2e8f0;
         letter-spacing: 0.03em;
     }
 
     /* ── FOOTER ── */
     .footer {
-        background: linear-gradient(135deg, #141828, #1a1f35);
-        border: 1px solid #1e2540;
-        border-radius: 14px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
         padding: 24px 40px;
         margin-top: 24px;
         text-align: center;
-        position: relative;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
     }
     .footer-title {
         font-size: 0.95rem;
         font-weight: 700;
-        color: #818cf8;
+        color: #4f46e5;
         margin-bottom: 4px;
     }
     .footer-sub {
         font-size: 0.8rem;
-        color: #475569;
+        color: #64748b;
     }
     .footer-badge {
         display: inline-block;
-        background: rgba(99,102,241,0.08);
-        border: 1px solid rgba(99,102,241,0.18);
-        color: #6366f1;
+        background: rgba(79, 70, 229, 0.05);
+        border: 1px solid rgba(79, 70, 229, 0.15);
+        color: #4f46e5;
         padding: 3px 10px;
         border-radius: 20px;
         font-size: 0.7rem;
@@ -227,8 +232,13 @@ def load():
 with st.spinner("⏳ Loading data from Supabase..."):
     results, students, departments, programs, enrollments, exams = load()
 
-# ── MERGE & CLEAN ───────────────────────────────────────────────
+# ── MERGE & CLEAN (KeyError Fix Included) ─────────────────────────
 df = results.merge(enrollments, on="enrollment_id", how="left")
+
+# Duplicated semester column handle karne ke liye renaming logic
+if 'semester' in df.columns:
+    df = df.rename(columns={'semester': 'semester_enrollment'})
+
 df = df.merge(students[['student_id','name','department_id','program_id','semester','cgpa','status']], on="student_id", how="left")
 df = df.merge(departments, on="department_id", how="left")
 df = df.merge(programs[['program_id','program_name','degree_level']], on="program_id", how="left")
@@ -300,7 +310,7 @@ st.markdown(f"""
   </div>
   <div class="kpi-card">
     <span class="kpi-icon">📈</span>
-    <span class="kpi-value" style="color:#6366f1;">{avg_cgpa:.2f}</span>
+    <span class="kpi-value" style="color:#4f46e5;">{avg_cgpa:.2f}</span>
     <span class="kpi-label">Avg CGPA</span>
   </div>
   <div class="kpi-card">
@@ -310,26 +320,26 @@ st.markdown(f"""
   </div>
   <div class="kpi-card">
     <span class="kpi-icon">✅</span>
-    <span class="kpi-value" style="color:#4ade80;">{pass_rate:.1f}%</span>
+    <span class="kpi-value" style="color:#16a34a;">{pass_rate:.1f}%</span>
     <span class="kpi-label">Pass Rate</span>
   </div>
   <div class="kpi-card">
     <span class="kpi-icon">❌</span>
-    <span class="kpi-value" style="color:#f87171;">{fail_rate:.1f}%</span>
+    <span class="kpi-value" style="color:#dc2626;">{fail_rate:.1f}%</span>
     <span class="kpi-label">Fail Rate</span>
   </div>
   <div class="kpi-card">
     <span class="kpi-icon">🏆</span>
-    <span class="kpi-value" style="color:#fbbf24;">{top_scorers:,}</span>
+    <span class="kpi-value" style="color:#d97706;">{top_scorers:,}</span>
     <span class="kpi-label">Top Scorers ≥80%</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-# ── CHART GLOBAL CONFIG (MATCHES LOGS PAGE 1 & 2) ───────────────
+# ── LIGHT THEME CHART GLOBAL CONFIG ─────────────────────────────
 BG  = 'rgba(0,0,0,0)'
-GRD = dict(gridcolor='#161b2c', zerolinecolor='#161b2c')
-TXT = '#94a3b8'
+GRD = dict(gridcolor='#e2e8f0', zerolinecolor='#e2e8f0') # Light grids
+TXT = '#475569' # Clean slate text
 LAY = dict(paper_bgcolor=BG, plot_bgcolor=BG,
            font=dict(color=TXT, family='Inter', size=12),
            margin=dict(l=10, r=20, t=10, b=10))
@@ -346,7 +356,7 @@ with c1:
     fig1 = px.bar(dc, x='Avg CGPA', y='Department', orientation='h',
                   color='Avg CGPA', color_continuous_scale='Blues',
                   text=dc['Avg CGPA'].round(2))
-    fig1.update_traces(textposition='outside', textfont=dict(color='#e2e8f0', size=12))
+    fig1.update_traces(textposition='outside', textfont=dict(color='#0f172a', size=12))
     fig1.update_layout(**LAY, height=360, coloraxis_showscale=False,
                        xaxis=dict(range=[0,4.5], title='Avg CGPA', **GRD),
                        yaxis=dict(title='', **GRD))
@@ -361,8 +371,8 @@ with c2:
     pf = pd.DataFrame({'Status': ['Pass', 'Fail'], 'Count': [pass_count, fail_count]})
     fig2 = go.Figure(go.Pie(
         labels=pf['Status'], values=pf['Count'], hole=0.55,
-        marker=dict(colors=['#4ade80', '#f87171'], line=dict(color='#111624', width=2)),
-        textinfo='percent+label', textfont=dict(size=13, color='#f1f5f9'),
+        marker=dict(colors=['#22c55e', '#ef4444'], line=dict(color='#ffffff', width=2)),
+        textinfo='percent+label', textfont=dict(size=13, color='#ffffff'),
         sort=False, direction='clockwise'
     ))
     fig2.update_layout(**{k:v for k,v in LAY.items() if k != 'margin'},
@@ -380,10 +390,10 @@ with c3:
     sp.columns = ['Semester','Avg Score']
     sp = sp.sort_values('Semester')
     fig3 = px.line(sp, x='Semester', y='Avg Score', markers=True,
-                   line_shape='spline', color_discrete_sequence=['#818cf8'])
-    fig3.update_traces(marker=dict(size=9, color='#818cf8', line=dict(color='#111624', width=2)), line=dict(width=2.5))
-    fig3.add_hline(y=50, line_dash="dash", line_color="#f87171",
-                   annotation_text="Pass Line 50%", annotation_font=dict(color="#f87171", size=11))
+                   line_shape='spline', color_discrete_sequence=['#4f46e5'])
+    fig3.update_traces(marker=dict(size=9, color='#4f46e5', line=dict(color='#ffffff', width=2)), line=dict(width=2.5))
+    fig3.add_hline(y=50, line_dash="dash", line_color="#ef4444",
+                   annotation_text="Pass Line 50%", annotation_font=dict(color="#ef4444", size=11))
     fig3.update_layout(**LAY, height=340,
                        xaxis=dict(title='Semester', dtick=1, **GRD),
                        yaxis=dict(title='Avg Score (%)', range=[0,105], **GRD))
@@ -397,7 +407,7 @@ with c4:
     dp.columns = ['Department','Pass Rate']
     dp = dp.sort_values('Pass Rate', ascending=False)
     fig4 = px.bar(dp, x='Department', y='Pass Rate', color='Pass Rate', color_continuous_scale='Greens', text=dp['Pass Rate'].round(1))
-    fig4.update_traces(texttemplate='%{text}%', textposition='outside', textfont=dict(color='#e2e8f0', size=11))
+    fig4.update_traces(texttemplate='%{text}%', textposition='outside', textfont=dict(color='#0f172a', size=11))
     fig4.update_layout(**LAY, height=340, coloraxis_showscale=False,
                        xaxis=dict(tickangle=-25, title='Department', **GRD),
                        yaxis=dict(range=[0,115], title='Pass Rate (%)', **GRD))
@@ -409,7 +419,7 @@ c5, c6 = st.columns([1, 2])
 with c5:
     st.markdown('<div class="ch-card">', unsafe_allow_html=True)
     st.markdown('<div class="sec-hdr">🅰️ Grade Distribution</div>', unsafe_allow_html=True)
-    GRADE_COLORS = {'A':'#4ade80','B':'#818cf8','C':'#fbbf24','D':'#fb923c','F':'#f87171'}
+    GRADE_COLORS = {'A':'#22c55e','B':'#3b82f6','C':'#eab308','D':'#f97316','F':'#ef4444'}
     all_grades   = ['A','B','C','D','F']
     gc = fdf['grade'].value_counts().reset_index()
     gc.columns = ['Grade','Count']
@@ -417,8 +427,8 @@ with c5:
     gc = gc[gc['Count'] > 0]
     fig5 = go.Figure(go.Pie(
         labels=gc['Grade'], values=gc['Count'], hole=0.5,
-        marker=dict(colors=[GRADE_COLORS.get(g, '#818cf8') for g in gc['Grade']], line=dict(color='#111624', width=2)),
-        textinfo='percent+label', textfont=dict(size=12, color='#f1f5f9'),
+        marker=dict(colors=[GRADE_COLORS.get(g, '#3b82f6') for g in gc['Grade']], line=dict(color='#ffffff', width=2)),
+        textinfo='percent+label', textfont=dict(size=12, color='#ffffff'),
         sort=False, direction='clockwise'
     ))
     fig5.update_layout(**{k:v for k,v in LAY.items() if k != 'margin'},
@@ -432,12 +442,12 @@ with c6:
     st.markdown('<div class="sec-hdr">🏆 Top 10 Students by CGPA</div>', unsafe_allow_html=True)
     top10 = students.merge(departments, on="department_id", how="left") \
         .sort_values('cgpa', ascending=False).head(10).reset_index(drop=True)
-    colors = ['#ffd700','#c0c0c0','#cd7f32','#818cf8','#818cf8', '#6366f1','#6366f1','#4f46e5','#4f46e5','#3730a3']
+    colors = ['#d97706','#94a3b8','#b45309','#6366f1','#6366f1', '#4f46e5','#4f46e5','#4338ca','#4338ca','#3730a3']
     fig6 = go.Figure(go.Bar(
         x=top10['cgpa'], y=top10['name'], orientation='h',
-        marker=dict(color=colors, line=dict(color='#111624', width=1)),
+        marker=dict(color=colors, line=dict(color='#ffffff', width=1)),
         text=top10['cgpa'].round(2), textposition='outside',
-        textfont=dict(color='#e2e8f0', size=12),
+        textfont=dict(color='#0f172a', size=12),
         hovertemplate='<b>%{y}</b><br>CGPA: %{x}<extra></extra>'
     ))
     fig6.update_layout(**LAY, height=340,
@@ -453,7 +463,7 @@ st.markdown('<div class="sec-hdr">📉 CGPA Trend — Semester Progression by De
 ds = students.merge(departments, on="department_id", how="left") \
     .groupby(['department_name','semester'])['cgpa'].mean().reset_index()
 ds.columns = ['Department','Semester','Avg CGPA']
-fig7 = px.line(ds, x='Semester', y='Avg CGPA', color='Department', markers=True, line_shape='spline', color_discrete_sequence=px.colors.qualitative.Vivid)
+fig7 = px.line(ds, x='Semester', y='Avg CGPA', color='Department', markers=True, line_shape='spline', color_discrete_sequence=px.colors.qualitative.Safe)
 fig7.update_traces(marker=dict(size=7), line=dict(width=2))
 fig7.update_layout(**LAY, height=400,
                    xaxis=dict(title='Semester', dtick=1, **GRD),
