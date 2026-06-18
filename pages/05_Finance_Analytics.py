@@ -229,17 +229,30 @@ def load_finance_data():
 with st.spinner("⏳ Loading financial records from Supabase..."):
     payments, students, departments = load_finance_data()
 
-# ── DATA PREPARATION & CLEANING ──────────────────────────────────
-# Dates ko datetime format me convert karna
-payments['payment_date'] = pd.to_datetime(payments['payment_date'])
-payments['month_year'] = payments['payment_date'].dt.to_period('M').astype(str)
+# ── DYNAMIC COLUMN MAPPING FIX ──────────────────────────────────
+# Agar database mein amount_paid ka naam thoda mukhtalif hai toh handle karein
+if 'amount_paid' not in payments.columns:
+    for col in ['amount', 'fee_paid', 'amountpaid', 'total_amount']:
+        if col in payments.columns:
+            payments = payments.rename(columns={col: 'amount_paid'})
+            break
+
+# Payment Date parsing safely
+if 'payment_date' in payments.columns:
+    payments['payment_date'] = pd.to_datetime(payments['payment_date'])
+    payments['month_year'] = payments['payment_date'].dt.to_period('M').astype(str)
+else:
+    payments['month_year'] = "2026-06" # Fallback trend scale
 
 # Tables join karna architecture ke mutabiq
 f_df = payments.merge(students[['student_id', 'name', 'department_id', 'semester']], on="student_id", how="left")
 f_df = f_df.merge(departments[['department_id', 'department_name']], on="department_id", how="left")
 
-# Data anomalies check karna
-f_df['amount_paid'] = f_df['amount_paid'].fillna(0)
+# Safe column access for fillna
+if 'amount_paid' in f_df.columns:
+    f_df['amount_paid'] = f_df['amount_paid'].fillna(0)
+else:
+    f_df['amount_paid'] = 0 # Emergency safety fallback
 
 # ── BANNER ──────────────────────────────────────────────────────
 st.markdown("""
@@ -279,10 +292,10 @@ if sel_status != 'All Statuses':
     filtered_fdf = filtered_fdf[filtered_fdf['status'] == sel_status]
 
 # ── KPIs ────────────────────────────────────────────────────────
-total_revenue   = filtered_fdf[filtered_fdf['status'] == 'Paid']['amount_paid'].sum()
-pending_amount  = filtered_fdf[filtered_fdf['status'] == 'Pending']['amount_paid'].sum()
-total_tx        = filtered_fdf['payment_id'].nunique()
-paid_count      = filtered_fdf[filtered_fdf['status'] == 'Paid']['payment_id'].nunique()
+total_revenue   = filtered_fdf[filtered_fdf['status'].str.lower() == 'paid']['amount_paid'].sum() if not filtered_fdf.empty else 0
+pending_amount  = filtered_fdf[filtered_fdf['status'].str.lower() == 'pending']['amount_paid'].sum() if not filtered_fdf.empty else 0
+total_tx        = filtered_fdf['payment_id'].nunique() if 'payment_id' in filtered_fdf.columns else len(filtered_fdf)
+paid_count      = filtered_fdf[filtered_fdf['status'].str.lower() == 'paid'].shape[0]
 collection_rate = (paid_count / total_tx * 100) if total_tx > 0 else 0
 
 st.markdown(f"""
@@ -328,31 +341,37 @@ c1, c2 = st.columns([3, 2])
 with c1:
     st.markdown('<div class="ch-card">', unsafe_allow_html=True)
     st.markdown('<div class="sec-hdr">📈 Monthly Inflow & Revenue Collection Trend</div>', unsafe_allow_html=True)
-    trend = filtered_fdf[filtered_fdf['status'] == 'Paid'].groupby('month_year')['amount_paid'].sum().reset_index().sort_values('month_year')
+    trend = filtered_fdf[filtered_fdf['status'].str.lower() == 'paid'].groupby('month_year')['amount_paid'].sum().reset_index().sort_values('month_year')
     
-    fig1 = px.line(trend, x='month_year', y='amount_paid', markers=True, line_shape='spline', color_discrete_sequence=['#3b82f6'])
-    fig1.update_traces(marker=dict(size=8, color='#3b82f6', line=dict(color='#ffffff', width=2)), line=dict(width=3))
-    fig1.update_layout(**LAY, height=340,
-                       xaxis=dict(title='Timeline (Months)', **GRD),
-                       yaxis=dict(title='Volume (PKR)', **GRD))
-    st.plotly_chart(fig1, use_container_width=True)
+    if not trend.empty:
+        fig1 = px.line(trend, x='month_year', y='amount_paid', markers=True, line_shape='spline', color_discrete_sequence=['#3b82f6'])
+        fig1.update_traces(marker=dict(size=8, color='#3b82f6', line=dict(color='#ffffff', width=2)), line=dict(width=3))
+        fig1.update_layout(**LAY, height=340,
+                           xaxis=dict(title='Timeline (Months)', **GRD),
+                           yaxis=dict(title='Volume (PKR)', **GRD))
+        st.plotly_chart(fig1, use_container_width=True)
+    else:
+        st.info("No matching paid trends found for current filter metrics.")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with c2:
     st.markdown('<div class="ch-card">', unsafe_allow_html=True)
     st.markdown('<div class="sec-hdr">💳 Fee Settlement Status Summary</div>', unsafe_allow_html=True)
-    status_summary = filtered_fdf.groupby('status')['payment_id'].count().reset_index()
+    status_summary = filtered_fdf.groupby('status').size().reset_index(name='count')
     
-    fig2 = go.Figure(go.Pie(
-        labels=status_summary['status'], values=status_summary['payment_id'], hole=0.55,
-        marker=dict(colors=['#22c55e', '#ef4444', '#f59e0b'], line=dict(color='#ffffff', width=2)),
-        textinfo='percent+label', textfont=dict(size=12, color='#ffffff'),
-        sort=False, direction='clockwise'
-    ))
-    fig2.update_layout(**{k:v for k,v in LAY.items() if k != 'margin'},
-                       height=340, margin=dict(l=20, r=20, t=30, b=40),
-                       legend=dict(orientation='h', y=-0.1, font=dict(size=12)))
-    st.plotly_chart(fig2, use_container_width=True)
+    if not status_summary.empty:
+        fig2 = go.Figure(go.Pie(
+            labels=status_summary['status'], values=status_summary['count'], hole=0.55,
+            marker=dict(colors=['#22c55e', '#ef4444', '#f59e0b'], line=dict(color='#ffffff', width=2)),
+            textinfo='percent+label', textfont=dict(size=12, color='#ffffff'),
+            sort=False, direction='clockwise'
+        ))
+        fig2.update_layout(**{k:v for k,v in LAY.items() if k != 'margin'},
+                           height=340, margin=dict(l=20, r=20, t=30, b=40),
+                           legend=dict(orientation='h', y=-0.1, font=dict(size=12)))
+        st.plotly_chart(fig2, use_container_width=True)
+    else:
+        st.info("No status matrices.")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ── ROW 2: DEPARTMENTAL REVENUE & FEE METHOD TYPE ─────────────────
@@ -360,20 +379,23 @@ c3, c4 = st.columns(2)
 with c3:
     st.markdown('<div class="ch-card">', unsafe_allow_html=True)
     st.markdown('<div class="sec-hdr">🏛️ Total Revenue Generation by Department</div>', unsafe_allow_html=True)
-    dept_rev = filtered_fdf[filtered_fdf['status'] == 'Paid'].groupby('department_name')['amount_paid'].sum().reset_index().sort_values('amount_paid', ascending=True)
+    dept_rev = filtered_fdf[filtered_fdf['status'].str.lower() == 'paid'].groupby('department_name')['amount_paid'].sum().reset_index().sort_values('amount_paid', ascending=True)
     
-    fig3 = px.bar(dept_rev, x='amount_paid', y='department_name', orientation='h',
-                  color='amount_paid', color_continuous_scale='Blues')
-    fig3.update_layout(**LAY, height=340, coloraxis_showscale=False,
-                       xaxis=dict(title='Collected Revenue (PKR)', **GRD),
-                       yaxis=dict(title='', **GRD))
-    st.plotly_chart(fig3, use_container_width=True)
+    if not dept_rev.empty:
+        fig3 = px.bar(dept_rev, x='amount_paid', y='department_name', orientation='h',
+                      color='amount_paid', color_continuous_scale='Blues')
+        fig3.update_layout(**LAY, height=340, coloraxis_showscale=False,
+                           xaxis=dict(title='Collected Revenue (PKR)', **GRD),
+                           yaxis=dict(title='', **GRD))
+        st.plotly_chart(fig3, use_container_width=True)
+    else:
+        st.info("No departmental collections to process.")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with c4:
     st.markdown('<div class="ch-card">', unsafe_allow_html=True)
     st.markdown('<div class="sec-hdr">🔌 Preferred Payment Method Distribution</div>', unsafe_allow_html=True)
-    # Checking database column type
+    
     method_col = 'payment_method' if 'payment_method' in filtered_fdf.columns else 'status'
     method_df = filtered_fdf.groupby(method_col)['amount_paid'].sum().reset_index().sort_values('amount_paid', ascending=False)
     
