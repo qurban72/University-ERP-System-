@@ -940,6 +940,61 @@ def main():
         fig.update_traces(textposition='inside', textinfo='percent+label')
         apply_chart(fig, 380)
         st.plotly_chart(fig, use_container_width=True)
+        
+    # ── Footer ─────────────────────────────────────────────────────────────────────
+    st.markdown("---")
+    st.markdown("""
+    <div style="
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        margin-top: 2rem;
+    ">
+        <div style="padding: 16px 20px; background: var(--card); border-right: 1px solid var(--border);">
+            <p style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+                    color:var(--muted);margin:0 0 10px;">Developer</p>
+            <p style="font-size:15px;font-weight:700;color:var(--text);margin:0 0 5px;">Jawad Larik</p>
+            <p style="font-size:12px;color:var(--muted);margin:0 0 3px;">🎓 BSIT · Sindh University, Hyderabad</p>
+            <p style="font-size:12px;color:var(--muted);margin:0;">📍 Hyderabad, Pakistan</p>
+        </div>
+        <div style="padding: 16px 20px; background: var(--card);">
+            <p style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+                    color:var(--muted);margin:0 0 10px;">Internship</p>
+            <p style="font-size:15px;font-weight:700;color:var(--text);margin:0 0 5px;">Technify Institute</p>
+            <p style="font-size:12px;color:var(--muted);margin:0 0 3px;">🪪 ID: Tech-DS-100-26</p>
+            <p style="font-size:12px;color:var(--muted);margin:0;">📊 Data Science Internship · Module 2</p>
+        </div>
+    </div>
+
+    <div style="
+        margin-top: 10px;
+        padding: 10px 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    ">
+        <div style="display:flex;gap:16px;align-items:center;">
+            <a href="https://github.com/Jawad-Larik" target="_blank"
+            style="font-size:12px;color:var(--accent);text-decoration:none;">
+                🐙 github.com/Jawad-Larik
+            </a>
+            <span style="color:var(--border);">|</span>
+            <a href="https://linkedin.com/in/jawad-larik01" target="_blank"
+            style="font-size:12px;color:var(--accent);text-decoration:none;">
+                💼 linkedin.com/in/Jawad-Larik
+            </a>
+        </div>
+        <span style="font-size:11px;color:var(--muted);">© 2026 Jawad Larik · All rights reserved</span>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════
 #  RUN APP
