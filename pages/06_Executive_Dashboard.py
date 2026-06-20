@@ -24,27 +24,116 @@ st.set_page_config(
 )
 
 # ============================================================================
-# LIGHT & SOFT CSS - GENTLE COLORS, EXECUTIVE PASTELS
+# UNIFIED LIGHT BACKGROUND CSS - WHITE THEME WITH BLACK SIDEBAR TEXT
 # ============================================================================
 st.markdown("""
     <style>
-    /* Main Header - Soft Executive gradient */
-    .main-header {
-        background: linear-gradient(135deg, #e3f2fd 0%, #e0f7fa 50%, #f3e5f5 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    /* Main app background - clean white */
+    .stApp {
+        background: #ffffff !important;
     }
     
-    .main-header h1 {
-        color: #1a446c !important;
-        margin: 0 !important;
+    /* Sidebar background - keep as is */
+    [data-testid="stSidebar"] {
+        background: #f8fafc !important;
+        border-right: 1px solid #e8edf3 !important;
     }
     
-    .main-header p {
-        color: #4a6f8a !important;
+    /* SIDEBAR TEXT COLOR - BLACK FOR VISIBILITY */
+    [data-testid="stSidebar"] * {
+        color: #000000 !important;
+    }
+    
+    /* Sidebar headings - black */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] h4, 
+    [data-testid="stSidebar"] h5, 
+    [data-testid="stSidebar"] h6 {
+        color: #000000 !important;
+    }
+    
+    /* Sidebar labels - black */
+    [data-testid="stSidebar"] label {
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Sidebar paragraphs - black */
+    [data-testid="stSidebar"] p {
+        color: #000000 !important;
+    }
+    
+    /* Sidebar select box text - black */
+    [data-testid="stSidebar"] .stSelectbox > div > div {
+        background-color: #ffffff !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 8px !important;
+        color: #000000 !important;
+    }
+    
+    [data-testid="stSidebar"] .stSelectbox select {
+        color: #000000 !important;
+    }
+    
+    [data-testid="stSidebar"] .stSelectbox option {
+        color: #000000 !important;
+    }
+    
+    /* Sidebar radio buttons text - black */
+    [data-testid="stSidebar"] .stRadio > div {
+        background-color: #ffffff !important;
+        padding: 8px 12px !important;
+        border-radius: 8px !important;
+    }
+    
+    [data-testid="stSidebar"] .stRadio label {
+        color: #000000 !important;
+    }
+    
+    /* Sidebar button text - white (keep as is) */
+    [data-testid="stSidebar"] .stButton > button {
+        background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 1rem !important;
+        font-weight: 500 !important;
+    }
+    
+    [data-testid="stSidebar"] .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3) !important;
+    }
+    
+    /* Role badge in sidebar - keep green */
+    .role-badge {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        padding: 0.4rem 1.2rem;
+        border-radius: 50px;
+        color: #2e7d32 !important;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+    
+    /* Main content area - transparent */
+    .main > div {
+        background: transparent !important;
+    }
+    
+    /* Block container */
+    .block-container {
+        background: transparent !important;
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+    
+    /* All st elements transparent */
+    .stMarkdown, .stPlotlyChart, .stDataFrame, 
+    .stSelectbox, .stRadio, .stButton, .stExpander {
+        background: transparent !important;
     }
     
     /* Headings styling */
@@ -53,12 +142,17 @@ st.markdown("""
         font-weight: 500 !important;
     }
     
-    /* Metric Cards - Light luxury pastel system */
+    /* Main content text */
+    p, li, span, div {
+        color: #1a1a2e !important;
+    }
+    
+    /* Metric Cards - White background with soft shadow */
     .metric-card {
-        background: linear-gradient(135deg, #ffffff, #fcfdfe);
+        background: #ffffff !important;
         padding: 1.5rem;
-        border-radius: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         text-align: center;
         border-top: 4px solid #90caf9;
         transition: transform 0.2s ease;
@@ -66,7 +160,7 @@ st.markdown("""
     
     .metric-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
     
     .metric-card h3 {
@@ -88,23 +182,94 @@ st.markdown("""
         font-size: 0.85rem;
         margin: 0;
     }
-
-    /* Strategic Role Badge Custom Style */
-    .role-badge {
-        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-        padding: 0.4rem 1.2rem;
-        border-radius: 50px;
-        color: #2e7d32 !important;
-        font-weight: 600;
-        display: inline-block;
-        margin-bottom: 1rem;
-    }
     
     /* Navigation Menu System Override */
     .nav-link-selected {
         background: linear-gradient(135deg, #bbdefb 0%, #e1f5fe 100%) !important;
         color: #0d47a1 !important;
     }
+
+    /* Banner Badge */
+    .banner-badge {
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        color: #0d47a1;
+        font-weight: 500;
+        display: inline-block;
+        margin: 0 0.3rem;
+        font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 2rem;
+        border-top: 1px solid #e8edf3;
+        color: #78909c;
+    }
+    
+    /* Fix any dark elements */
+    .st-emotion-cache-1r6slb0 {
+        background-color: #ffffff !important;
+    }
+    
+    .st-emotion-cache-1wmy9hl {
+        background-color: #ffffff !important;
+    }
+    
+    .st-emotion-cache-1v0mbdj {
+        background-color: #ffffff !important;
+    }
+    
+    .st-emotion-cache-1r4qj8v {
+        background-color: #ffffff !important;
+    }
+    
+    /* Sidebar image container */
+    .stImage {
+        background: transparent !important;
+    }
+    
+    /* Streamlit option menu customization */
+    .st-emotion-cache-16idsys {
+        background: #ffffff !important;
+    }
+    
+    /* Sidebar divider lines */
+    hr {
+        border-color: #d1d5db !important;
+    }
+            
+        /* Sidebar divider lines */
+    hr {
+        border-color: #d1d5db !important;
+    }
+    
+    /* DEPLOYMENT BAR FIX - ADD THIS */
+    header[data-testid="stHeader"] {
+        background: #f8fafc !important;
+        border-bottom: 1px solid #e8edf3 !important;
+    }
+    
+    header[data-testid="stHeader"] * {
+        color: #1a1a2e !important;
+    }
+
+        /* Footer */
+    .footer {
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 2rem;
+        border-top: 1px solid #e8edf3;
+        color: #78909c;
+    }
+    
+    .footer p {
+        margin: 0.3rem 0;
+    }        
+
     </style>
 """, unsafe_allow_html=True)
 
@@ -156,7 +321,7 @@ def generate_executive_mock_data():
         data.append({
             'student_id': f"REG-{np.random.randint(100000, 999999)}",
             'department': np.random.choice(departments),
-            'attendance': np.random.beta(a=7, b=2) * 100, # Realistic skewed attendance
+            'attendance': np.random.beta(a=7, b=2) * 100,
             'gpa': np.clip(np.random.normal(3.1, 0.5), 0.0, 4.0),
             'fee_allocated': allocated_fee,
             'fee_collected': fee_collected,
@@ -170,17 +335,103 @@ def generate_executive_mock_data():
 def main():
     # Real-time Strategic Clock Interface
     st.markdown(f"""
-        <div style='text-align: right; margin-bottom: -1rem;'>
+        <div style='text-align: right; padding: 1rem 0 0.5rem 0;'>
             <p style='color: #78909c; font-size: 0.85rem;'>👑 System Status: Secure | Operational 🕐 {get_live_datetime()}</p>
         </div>
     """, unsafe_allow_html=True)
-    
-    st.markdown("""
-        <div class='main-header'>
-            <h1>🏛️ Executive Command Dashboard</h1>
-            <p style='font-size: 1.1rem; margin-top: 0.5rem;'>Strategic Institutional KPIs & Resource Planning Analytics</p>
+    # NEW HEADER WITH EXAMINATION ANALYTICS STYLE
+    st.markdown(
+        f"""
+        <div style='background: white; padding: 2rem 2.5rem; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-left: 6px solid #4f46e5;'>
+            <div style='display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;'>
+                <span style='
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: #4f46e5;
+                '>
+                    🏛️ Executive Command Dashboard
+                </span>
+                <span style='
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    color: #4f46e5;
+                '>
+                    Data Science Team 1
+                </span>
+            </div>
+            <h1 style="
+                margin:0;
+                font-size:3rem;
+                font-weight:800;
+                line-height:1.05;
+                letter-spacing:-1px;
+            ">
+                <span style="color:#0f172a; font-weight:800;">🏛️ Executive</span>
+                <span style="
+                    background: linear-gradient(90deg, #6366f1, #0ea5e9);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    font-weight:800;
+                ">Command</span><br>
+                <span style="color:#0f172a; font-weight:800;">Dashboard</span>
+            </h1>
+            <p style='color: #6a7a8a; margin: 0 0 0.5rem 0; font-size: 1rem; font-weight: 400;'>
+                Strategic Institutional KPIs & Resource Planning Analytics
+            </p>
+            <div style='display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; margin-top: 0.5rem; white-space: nowrap;'>
+                <span style='
+                    background: #eef3f7;
+                    padding: 4px 14px;
+                    border-radius: 20px;
+                    font-size: 0.8rem;
+                    color: #4f46e5;
+                    font-weight: 500;
+                '>
+                    📊 Live System
+                </span>
+                <span style="
+                    display:flex;
+                    align-items:center;
+                    height:32px;
+                    gap:6px;
+                    padding:0 14px;
+                    background:#eef3f7;
+                    border-radius:20px;
+                    font-size:0.8rem;
+                    color:#4f46e5;
+                    font-weight:500;
+                    position:relative;
+                    top:1px;
+                ">
+                    <span style="
+                        width:8px;
+                        height:8px;
+                        background:#2962FF;
+                        border-radius:50%;
+                    "></span>
+                    Real-time
+                </span>
+                <span style="
+                    display:flex;
+                    align-items:center;
+                    height:32px;
+                    padding:0 14px;
+                    background:#eef3f7;
+                    border-radius:20px;
+                    font-size:0.8rem;
+                    color:#4f46e5;
+                    font-weight:500;
+                    position:relative;
+                    top:8px;
+                ">
+                    🐘 PostgreSQL
+                </span>
+            </div>
         </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
     
     # ------------------------------------------------------------------------
     # CONTROLLER SIDEBAR: EXECUTIVE PRIVILEGES
@@ -338,7 +589,7 @@ def main():
                 y='gpa',
                 color='department',
                 size='fee_allocated',
-                color_discrete_sequence=px.colors.qualitative.Pastel,  #  Yeh bilkul sahi hai
+                color_discrete_sequence=px.colors.qualitative.Pastel,
                 labels={'attendance': 'Attendance (%)', 'gpa': 'Student Cumulative GPA'},
                 opacity=0.6
             )
@@ -469,13 +720,14 @@ def main():
             use_container_width=True
         )
 
-    # Footer Design Pattern Architecture Implementation
+        # Footer - Place this at the end of your main() function
     st.markdown("""
-        <div class='footer'>
-            <p><strong>University Enterprise Resource Planning System (ERP)</strong></p>
-            <p style='font-size:0.8rem;'>Protected Under Institutional Cryptographic Architecture Level V Enterprise Governance Suite</p>
+        <div class='footer' style='display: block !important; visibility: visible !important; opacity: 1 !important;'>
+            <p><strong style='color: #4f46e5; display: inline-block;'>University Enterprise Resource Planning System (ERP)</strong></p>
+            <p style='font-size:0.8rem; color: #78909c;'>Protected Under Institutional Cryptographic Architecture Level V Enterprise Governance Suite</p>
         </div>
     """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
+
