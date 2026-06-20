@@ -12,6 +12,53 @@ from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')
 
+
+BRIGHT = {
+    "blue": "#2962FF",
+    "cyan": "#00C2FF",
+    "green": "#00C853",
+    "red": "#FF1744",
+    "orange": "#FF9100",
+    "yellow": "#FFEA00",
+    "purple": "#7C4DFF",
+    "pink": "#FF4081"
+}
+def apply_theme(fig):
+    fig.update_layout(
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        font=dict(color="#0f172a")
+    )
+    return fig
+# ================================
+# BRIGHT THEME (ADD HERE)
+# ================================
+
+import plotly.io as pio
+
+BRIGHT_COLORS = [
+    "#1D4ED8",  # blue
+    "#F97316",  # orange
+    "#16A34A",  # green
+    "#DC2626",  # red
+    "#7C3AED",  # purple
+    "#06B6D4",  # cyan
+    "#EAB308",  # yellow
+    "#EC4899",  # pink
+]
+
+pio.templates["bright"] = go.layout.Template(
+    layout=dict(
+        colorway=BRIGHT_COLORS,
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font=dict(color="#0f172a", size=14),
+        xaxis=dict(gridcolor="#e5e7eb"),
+        yaxis=dict(gridcolor="#e5e7eb"),
+    )
+)
+
+pio.templates.default = "bright"
 # Advanced Page Configuration
 st.set_page_config(
     page_title="Examination Analytics | University ERP",
@@ -25,777 +72,173 @@ st.set_page_config(
     }
 )
 
+
 # ============================================================================
 # LIGHT & SOFT CSS - GENTLE COLORS, NO DARK TEXT
 # ============================================================================
 st.markdown("""
-    <style>
-    /* Main Header - Soft gradient with light colors */
-    .main-header {
-        background: linear-gradient(135deg, #1a3a6a 0%, #2f528f 50%, #3a6a9f 100%);
-        padding: 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        text-align: center;
-        box-shadow: 0 4px 15px rgba(47, 82, 143, 0.35);
-        border-bottom: 3px solid #4ab8e8;
-    }
-    
-    /* Force ALL text in header to be white */
-    .main-header,
-    .main-header *,
-    .main-header h1,
-    .main-header p,
-    .main-header span,
-    .main-header div,
-    .main-header strong,
-    .main-header em,
-    .main-header b,
-    .main-header i {
-        color: #ffffff !important;
-    }
-    
-    .main-header h1 {
-        margin: 0 !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.5px;
-        font-size: 2.2rem !important;
-    }
-    
-    .main-header p {
-        font-weight: 300 !important;
-        margin: 0.3rem 0 !important;
-    }
-    
-    .main-header p:first-of-type {
-        font-size: 1.1rem !important;
-    }
-    
-    .main-header p:last-of-type {
-        font-size: 0.9rem !important;
-        opacity: 0.85;
-    }
-    
-    
-    /* ALL Headings - Soft blue-gray (EXCEPT header) */
-h1:not(.main-header h1), 
-h2, h3, h4, h5, h6 {
-    color: #3a7ca5 !important;
-    font-weight: 500 !important;
+<style>
+/* Main Header - Soft gradient with light colors */
+.main-header {
+    background: linear-gradient(135deg, #1a3a6a 0%, #2f528f 50%, #3a6a9f 100%);
+    padding: 2rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-bottom: 3px solid #1a2a5e;
 }
 
-.stMarkdown h1:not(.main-header h1), 
-.stMarkdown h2, 
-.stMarkdown h3, 
-.stMarkdown h4 {
-    color: #3a7ca5 !important;
+/* Force ALL text in header to be white */
+.main-header,
+.main-header * {
+    color: #ffffff !important;
 }
-    
-    /* Subheaders - Soft blue */
-    .stSubheader, .stHeader {
-        color: #4a8bb5 !important;
-    }
-    
-    /* Tab Headers - Soft gray-blue */
-    .stTabs [data-baseweb="tab-list"] button p {
-        color: #5a7d9a !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Selected Tab - Soft pastel gradient */
-    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
-        background: linear-gradient(135deg, #b8e1fc 0%, #d4f1f9 100%) !important;
-        border-radius: 12px !important;
-    }
-    
-    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] p {
-        color: #2c5f8a !important;
-        font-weight: 600 !important;
-    }
-    
-    /* Metric Cards - Light pastel backgrounds */
-    .metric-card {
-        background: linear-gradient(135deg, #ffffff, #f8fbfe);
-        padding: 1.2rem;
-        border-radius: 20px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        text-align: center;
-        border-top: 3px solid #a8e6cf;
-        transition: transform 0.2s ease;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-    }
-    
-    .metric-card h3 {
-        color: #7a9cbb !important;
-        margin: 0;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-    }
-    
-    .metric-card h2 {
-        color: #3a7ca5 !important;
-        margin: 0.5rem 0;
-        font-size: 2rem;
-    }
-    
-    .metric-card p {
-        color: #8aaec9 !important;
-    }
-    
-    /* Info Box - Matching Header Style with FORCED overrides */
-div.info-box,
-.info-box,
-.info-box.info-box {
-    background: linear-gradient(135deg, #1a3a6a 0%, #2f528f 50%, #3a6a9f 100%) !important;
+
+.main-header h1 {
+    margin: 0 !important;
+    font-weight: 800 !important;
+    font-size: 3.2rem !important;
+    letter-spacing: -1.5px !important;
+    line-height: 1.05 !important;
+}
+
+.main-header p {
+    font-weight: 300 !important;
+    margin: 0.3rem 0 !important;
+}
+
+/* Headings */
+h1:not(.main-header h1),
+h2, h3, h4, h5, h6 {
+    color: #1a2a5e !important;
+    font-weight: 600 !important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
+    background: linear-gradient(135deg, #b8e1fc 0%, #d4f1f9 100%) !important;
+    border-radius: 12px !important;
+}
+
+.stTabs [data-baseweb="tab-list"] button[aria-selected="true"] p {
+    color: #2c5f8a !important;
+}
+
+/* Metric Cards */
+.metric-card {
+    background: linear-gradient(135deg, #ffffff, #f8fbfe);
+    padding: 1.2rem;
+    border-radius: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    text-align: center;
+    border-top: 3px solid #4f46e5;
+}
+
+/* =========================
+   INFO BOX (FINAL FIX ONLY)
+   ========================= */
+
+.info-box {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+
     padding: 2rem !important;
     border-radius: 16px !important;
     margin: 1rem 0 !important;
-    border-left: 4px solid #4ab8e8 !important;
-    border-top: none !important;
-    border-right: none !important;
-    border-bottom: none !important;
-    box-shadow: 0 4px 20px rgba(47, 82, 143, 0.3) !important;
+
+    border: 1px solid #e0eff5 !important;
+    border-left: 4px solid #4f46e5 !important;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+
+    color: #2c3e50 !important;
 }
 
-/* Force ALL text inside info-box to be white/light */
-div.info-box *,
-.info-box *,
+/* Info Box Text */
 .info-box h2,
-.info-box p,
-.info-box li,
-.info-box span,
-.info-box div,
-.info-box strong,
-.info-box em,
-.info-box ul,
-.info-box ol,
 .info-box h4 {
-    color: #d0e0f0 !important;
+    color: #1a2a5e !important;
 }
 
-div.info-box h2,
-.info-box h2 {
-    color: #ffffff !important;
-    font-size: 2rem !important;
-}
-
-div.info-box h4,
-.info-box h4 {
-    color: #4ab8e8 !important;
-}
-
-div.info-box p,
 .info-box p {
-    color: #d0e0f0 !important;
+    color: #2c3e50 !important;
 }
 
-div.info-box ul,
-.info-box ul {
-    color: #d0e0f0 !important;
-}
-
-div.info-box li,
+.info-box ul,
 .info-box li {
-    color: #d0e0f0 !important;
+    color: #2c3e50 !important;
 }
-    
-    /* Sidebar - Light background */
-    .css-1d391kg {
-        background-color: #fafcfd !important;
-    }
-    
-    .sidebar .stMarkdown h1, .sidebar .stMarkdown h2, .sidebar .stMarkdown h3 {
-        color: #3a7ca5 !important;
-    }
-    
-    /* Navigation Menu */
-    .nav-link {
-        color: #5a7d9a !important;
-        transition: all 0.2s;
-    }
-    
-    .nav-link:hover {
-        background: #e8f4f9 !important;
-        border-radius: 10px;
-    }
-    
-    .nav-link-selected {
-        background: linear-gradient(135deg, #c5e8f7 0%, #daf2fa 100%) !important;
-        color: #2c5f8a !important;
-        border-radius: 10px;
-    }
-    
-    .nav-link-selected span {
-        color: #2c5f8a !important;
-    }
-    
-    /* Metrics */
-    .stMetric label, .stMetric .stMetricLabel {
-        color: #5a8bb5 !important;
-        font-weight: 500 !important;
-    }
-    
-    .stMetric .stMetricValue {
-        color: #4a9fd5 !important;
-        font-size: 1.6rem !important;
-    }
-    
-    /* DataTable - Light headers */
-    .dataframe {
-        color: #4a6f8a !important;
-    }
-    
-    .dataframe thead tr th {
-        background: linear-gradient(135deg, #c5e8f7 0%, #daf2fa 100%) !important;
-        color: #2c5f8a !important;
-        font-weight: 600;
-    }
-    
-    .dataframe td {
-        color: #5a7d9a !important;
-    }
-    
-    /* Buttons - Soft gradient */
-    .stButton > button {
-        background: linear-gradient(135deg, #b8dff0 0%, #cce8f5 100%);
-        color: #3a7ca5 !important;
-        border: none;
-        border-radius: 12px;
-        font-weight: 500;
-        transition: all 0.2s;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        background: linear-gradient(135deg, #c5e5f5 0%, #d8edf8 100%);
-    }
-    
-    /* All text elements - Soft colors */
-    .stMarkdown p, .stMarkdown li, .stMarkdown span {
-        color: #5a7d9a !important;
-    }
-    
-    /* Alert boxes - Soft pastel */
-    .stAlert {
-        border-radius: 12px;
-    }
-    
-    .stAlert p, .stSuccess p, .stWarning p, .stError p, .stInfo p {
-        color: #4a7ba8 !important;
-    }
-    
-    /* Expander */
-    .streamlit-expanderHeader {
-        color: #5a8bb5 !important;
-        font-weight: 500 !important;
-        background: #f5fafd;
-        border-radius: 10px;
-    }
-    
-    /* Form labels */
-    .stSelectbox label, .stMultiSelect label, .stRadio label, .stCheckbox label {
-        color: #5a8bb5 !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Footer */
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background-color: #fafcfd !important;
+}
+
+/* Buttons */
+.stButton > button {
+    background: linear-gradient(135deg, #b8dff0 0%, #cce8f5 100%);
+    color: #3a7ca5 !important;
+    border: none;
+    border-radius: 12px;
+}
+
+/* Inputs */
+.stTextInput input,
+.stSelectbox select,
+.stTextArea textarea {
+    background-color: #fafcfd;
+    color: #4a6f8a;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    background-color: #0a0a0a !important;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #2f528f !important;
+    border-radius: 10px !important;
+}
+/* FULL PAGE BACKGROUND (WHITE KO SOFT GREY BANAYE) */
+.stApp {
+    background-color: #f5f7fa;
+}
+ /* ── FOOTER ── */
     .footer {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px 40px;
+        margin-top: 24px;
         text-align: center;
-        padding: 1.5rem;
-        margin-top: 2rem;
-        border-top: 1px solid #e0eff5;
-        background: linear-gradient(135deg, #fafdfe, #ffffff);
-        border-radius: 16px;
-    }
-    
-    .footer p, .footer strong {
-        color: #8aaec9 !important;
-    }
-    
-    /* Value colors for metrics - Soft versions */
-    .metric-card h2[style*="color:#20bf6b"] {
-        color: #6abf8a !important;
-    }
-    
-    .metric-card h2[style*="color:#fc5c65"] {
-        color: #e88a8a !important;
-    }
-    
-    .metric-card h2[style*="color:#feca57"] {
-        color: #e8c38a !important;
-    }
-    
-    .metric-card h2[style*="color:#0abde3"] {
-        color: #7acce0 !important;
-    }
-    
-    /* Input fields */
-    .stTextInput input, .stSelectbox select, .stTextArea textarea {
-        background-color: #fafcfd;
-        color: #4a6f8a;
-        border: 1px solid #d4e6f0;
-    }
-    
-    /* Radio buttons */
-    .stRadio label {
-        color: #5a7d9a !important;
-    }
-    
-    /* Checkbox */
-    .stCheckbox label {
-        color: #5a7d9a !important;
-    }
-    
-    /* Success message */
-    .stSuccess {
-        background-color: #e8f8f0;
-        color: #6abf8a;
-    }
-    /* ULTIMATE OVERRIDE - Force header text to white */
-    div.main-header h1,
-    div.main-header p,
-    div.main-header * {
-    color: #ffffff !important;
-    }
-    
-    
-    /* ====== GLOBAL BACKGROUND BLACK ====== */
-    /* Main app background */
-    .stApp {
-        background-color: #0a0a0a !important;
-    }
-    
-    /* Main content area */
-    .main > div {
-        background-color: #0a0a0a !important;
-    }
-    
-    /* Block containers */
-    .block-container {
-        background-color: #0a0a0a !important;
-    }
-    
-    /* All divs inside main */
-    .stApp > div,
-    .stApp .main,
-    .stApp .block-container,
-    .stApp .element-container,
-    .stApp .stMarkdown,
-    .stApp .stDataFrame,
-    .stApp .stPlotlyChart {
-        background-color: #0a0a0a !important;
-    }
-    
-    /* All text to white for readability */
-    .stApp,
-    .stApp p,
-    .stApp li,
-    .stApp span,
-    .stApp label,
-    .stApp .stMarkdown,
-    .stApp .stText,
-    .stApp .stMetric label,
-    .stApp .stMetric .stMetricLabel {
-        color: #ffffff !important;
-    }
-    
-    /* Headings - make them visible on black */
-    h1, h2, h3, h4, h5, h6 {
-        color: #4ab8e8 !important;
-    }
-    
-    /* Metric cards on black background */
-    .metric-card {
-        background: linear-gradient(135deg, #1a1a1a, #2a2a2a) !important;
-        border: 1px solid #3a3a3a !important;
-    }
-    
-    .metric-card h2 {
-        color: #4ab8e8 !important;
-    }
-    
-    .metric-card h3 {
-        color: #8aaec9 !important;
-    }
-    
-    .metric-card p {
-        color: #8aaec9 !important;
-    }
-    
-    /* DataFrames on black */
-    .dataframe {
-        background-color: #1a1a1a !important;
-        color: #ffffff !important;
-    }
-    
-    .dataframe thead tr th {
-        background: linear-gradient(135deg, #2f528f 0%, #4a7abf 100%) !important;
-        color: #ffffff !important;
-    }
-    
-    .dataframe td {
-        color: #d0d0d0 !important;
-        border-color: #3a3a3a !important;
-    }
-    
-    .dataframe tbody tr:nth-child(even) {
-        background-color: #252525 !important;
-    }
-    
-    .dataframe tbody tr:nth-child(odd) {
-        background-color: #1a1a1a !important;
-    }
-    
-    /* Info boxes */
-    .info-box {
-        background: linear-gradient(135deg, #1a2a3a 0%, #0a1a2a 100%) !important;
-        border-left: 4px solid #4ab8e8 !important;
-        border: 1px solid #2a4a6a !important;
-    }
-    
-    .info-box strong, .info-box p, .info-box h4 {
-        color: #d0e0f0 !important;
-    }
-    
-    /* ====== SIDEBAR - GRAY BACKGROUND ====== */
-    /* Main sidebar container */
-    [data-testid="stSidebar"],
-    [data-testid="stSidebar"] > div:first-child,
-    [data-testid="stSidebar"] .css-1d391kg,
-    [data-testid="stSidebar"] .css-1d391kg > div,
-    [data-testid="stSidebar"] .css-1d391kg > div > div {
-        background-color: #2a2a2a !important;
-    }
-    
-    [data-testid="stSidebar"] {
-        border-right: 1px solid #3a3a3a !important;
-    }
-    
-    /* Remove black boxes from sidebar elements */
-    [data-testid="stSidebar"] .element-container,
-    [data-testid="stSidebar"] .stMarkdown,
-    [data-testid="stSidebar"] .stImage,
-    [data-testid="stSidebar"] .stButton,
-    [data-testid="stSidebar"] .stSelectbox,
-    [data-testid="stSidebar"] .stRadio,
-    [data-testid="stSidebar"] .stTextInput,
-    [data-testid="stSidebar"] .stAlert,
-    [data-testid="stSidebar"] .stSuccess,
-    [data-testid="stSidebar"] .stWarning,
-    [data-testid="stSidebar"] .stInfo,
-    [data-testid="stSidebar"] .stError {
-        background-color: transparent !important;
-    }
-    
-    /* Sidebar image container */
-    [data-testid="stSidebar"] .stImage img {
-        background-color: transparent !important;
-    }
-    
-    /* Sidebar all text */
-    [data-testid="stSidebar"] *,
-    [data-testid="stSidebar"] .stMarkdown p,
-    [data-testid="stSidebar"] .stMarkdown h1,
-    [data-testid="stSidebar"] .stMarkdown h2,
-    [data-testid="stSidebar"] .stMarkdown h3,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] div {
-        color: #ffffff !important;
-    }
-    
-    /* Sidebar headings */
-    [data-testid="stSidebar"] h1,
-    [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3 {
-        color: #4ab8e8 !important;
-    }
-    
-    /* ====== FIX SELECTBOX - VISIBLE TEXT ====== */
-    /* Selectbox container */
-    [data-testid="stSidebar"] .stSelectbox,
-    [data-testid="stSidebar"] .stSelectbox > div,
-    [data-testid="stSidebar"] .stSelectbox > div > div {
-        background-color: transparent !important;
-    }
-    
-    /* Selectbox input field */
-    [data-testid="stSidebar"] .stSelectbox select {
-        background-color: #3a3a3a !important;
-        color: #ffffff !important;
-        border: 1px solid #4a4a4a !important;
-        padding: 0.5rem !important;
-        border-radius: 8px !important;
-        font-size: 14px !important;
-    }
-    
-    /* Selectbox dropdown options */
-    [data-testid="stSidebar"] .stSelectbox select option {
-        background-color: #3a3a3a !important;
-        color: #ffffff !important;
-        padding: 0.5rem !important;
-    }
-    
-    /* Selectbox when focused */
-    [data-testid="stSidebar"] .stSelectbox select:focus {
-        border-color: #4ab8e8 !important;
-        box-shadow: 0 0 0 2px rgba(74, 184, 232, 0.2) !important;
-        outline: none !important;
-    }
-    
-    /* Selectbox hover */
-    [data-testid="stSidebar"] .stSelectbox select:hover {
-        border-color: #4ab8e8 !important;
-    }
-    
-    /* Selectbox label */
-    [data-testid="stSidebar"] .stSelectbox label {
-        color: #8aaec9 !important;
-        font-weight: 500 !important;
-    }
-    
-    /* ====== FIX TEXT INPUT ====== */
-    [data-testid="stSidebar"] .stTextInput input {
-        background-color: #3a3a3a !important;
-        color: #ffffff !important;
-        border: 1px solid #4a4a4a !important;
-        padding: 0.5rem !important;
-        border-radius: 8px !important;
-    }
-    
-    [data-testid="stSidebar"] .stTextInput input:focus {
-        border-color: #4ab8e8 !important;
-        box-shadow: 0 0 0 2px rgba(74, 184, 232, 0.2) !important;
-        outline: none !important;
-    }
-    
-    [data-testid="stSidebar"] .stTextInput label {
-        color: #8aaec9 !important;
-        font-weight: 500 !important;
-    }
-    
-    /* ====== FIX RADIO BUTTONS ====== */
-    [data-testid="stSidebar"] .stRadio label {
-        color: #ffffff !important;
-    }
-    
-    [data-testid="stSidebar"] .stRadio [role="radiogroup"] {
-        background-color: #3a3a3a !important;
-        padding: 0.5rem !important;
-        border-radius: 8px !important;
-    }
-    
-    /* Sidebar buttons */
-    [data-testid="stSidebar"] .stButton > button {
-        background: linear-gradient(135deg, #2f528f 0%, #4a7abf 100%) !important;
-        color: #ffffff !important;
-        border: none !important;
-    }
-    
-    [data-testid="stSidebar"] .stButton > button:hover {
-        background: linear-gradient(135deg, #1a3a6a 0%, #2f528f 100%) !important;
-        box-shadow: 0 4px 16px rgba(47, 82, 143, 0.3) !important;
-    }
-    
-    /* Sidebar info boxes */
-    [data-testid="stSidebar"] .sidebar-info {
-        background: #3a3a3a !important;
-        border-left: 3px solid #4ab8e8 !important;
-        padding: 0.75rem !important;
-        border-radius: 8px !important;
-        margin: 0.5rem 0 !important;
-    }
-    
-    [data-testid="stSidebar"] .sidebar-info p,
-    [data-testid="stSidebar"] .sidebar-info strong {
-        color: #ffffff !important;
-    }
-    
-    /* Sidebar success/warning messages */
-    [data-testid="stSidebar"] .stAlert {
-        background-color: #3a3a3a !important;
-        border: 1px solid #4a4a4a !important;
-    }
-    
-    [data-testid="stSidebar"] .stAlert p {
-        color: #ffffff !important;
-    }
-    
-    /* Sidebar scrollbar */
-    [data-testid="stSidebar"] ::-webkit-scrollbar {
-        background-color: #2a2a2a !important;
-    }
-    
-    [data-testid="stSidebar"] ::-webkit-scrollbar-thumb {
-        background-color: #4ab8e8 !important;
-        border-radius: 10px !important;
-    }
-    
-    /* Navigation menu */
-    .nav-link {
-        color: #8aaec9 !important;
-    }
-    
-    .nav-link:hover {
-        background: #1a2a3a !important;
-    }
-    
-    .nav-link-selected {
-        background: linear-gradient(135deg, #2f528f 0%, #4a7abf 100%) !important;
-        color: #ffffff !important;
-    }
-    
-    .nav-link-selected span {
-        color: #ffffff !important;
-    }
-    
-    /* Input fields on black */
-    .stTextInput input, 
-    .stSelectbox select, 
-    .stTextArea textarea {
-        background-color: #1a1a1a !important;
-        color: #ffffff !important;
-        border: 1px solid #3a3a3a !important;
-    }
-    
-    .stTextInput input:focus, 
-    .stSelectbox select:focus {
-        border-color: #4ab8e8 !important;
-        box-shadow: 0 0 0 2px rgba(74, 184, 232, 0.1) !important;
-    }
-    
-    /* Selectbox options */
-    .stSelectbox option {
-        background-color: #1a1a1a !important;
-        color: #ffffff !important;
-    }
-    
-    /* Buttons on black */
-    .stButton > button {
-        background: linear-gradient(135deg, #2f528f 0%, #4a7abf 100%) !important;
-        color: #ffffff !important;
-        border: none !important;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px rgba(47, 82, 143, 0.3) !important;
-        background: linear-gradient(135deg, #1a3a6a 0%, #2f528f 100%) !important;
-    }
-    
-    /* Tabs on black */
-    .stTabs [data-baseweb="tab-list"] button p {
-        color: #8aaec9 !important;
-    }
-    
-    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
-        background: linear-gradient(135deg, #1a2a3a 0%, #2a4a6a 100%) !important;
-        border-bottom: 3px solid #4ab8e8 !important;
-    }
-    
-    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] p {
-        color: #4ab8e8 !important;
-    }
-    
-    /* Metrics on black */
-    .stMetric label, 
-    .stMetric .stMetricLabel {
-        color: #8aaec9 !important;
-    }
-    
-    .stMetric .stMetricValue {
-        color: #4ab8e8 !important;
-    }
-    
-    /* Alert boxes on black */
-    .stAlert {
-        background-color: #1a1a1a !important;
-        border: 1px solid #3a3a3a !important;
-    }
-    
-    .stAlert p {
-        color: #d0d0d0 !important;
-    }
-    
-    /* Success message */
-    .stSuccess {
-        background-color: #0a2a1a !important;
-        border: 1px solid #2a6a4a !important;
-        color: #4aaf6a !important;
-    }
-    
-    /* Warning message */
-    .stWarning {
-        background-color: #2a2a0a !important;
-        border: 1px solid #6a6a2a !important;
-        color: #e8b830 !important;
-    }
-    
-    /* Error message */
-    .stError {
-        background-color: #2a0a0a !important;
-        border: 1px solid #6a2a2a !important;
-        color: #d45a5a !important;
-    }
-    
-    /* Info message */
-    .stInfo {
-        background-color: #0a1a2a !important;
-        border: 1px solid #2a4a6a !important;
-        color: #4ab8e8 !important;
-    }
-    
-    /* Footer */
-    .footer {
-        background: linear-gradient(135deg, #0a0a0a, #1a1a1a) !important;
-        border-top: 1px solid #2a2a2a !important;
-    }
-    
-    .footer p, .footer strong {
-        color: #8aaec9 !important;
-    }
-    
-    /* Expander */
-    .streamlit-expanderHeader {
-        background: #1a1a1a !important;
-        color: #4ab8e8 !important;
-        border: 1px solid #2a2a2a !important;
-    }
-    
-    /* Radio buttons */
-    .stRadio label {
-        color: #d0d0d0 !important;
-    }
-    
-    /* Checkbox */
-    .stCheckbox label {
-        color: #d0d0d0 !important;
-    }
-    
-    /* Plotly charts - dark background */
-    .js-plotly-plot {
-        background-color: transparent !important;
-    }
-    
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-        background-color: #0a0a0a !important;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background-color: #2f528f !important;
-        border-radius: 10px !important;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background-color: #1a1a1a !important;
-    }
-    </style>
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    }
+    .footer-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #4f46e5;
+        margin-bottom: 4px;
+    }
+    .footer-sub {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+    .footer-badge {
+        display: inline-block;
+        background: rgba(79, 70, 229, 0.05);
+        border: 1px solid rgba(79, 70, 229, 0.15);
+        color: #4f46e5;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin: 8px 4px 0 4px;
+    }
+
+    #MainMenu {visibility:hidden;}
+    footer {visibility:hidden;}
+    header {visibility:hidden;}   
+</style>
 """, unsafe_allow_html=True)
 # ============================================================================
 # ADVANCED FEATURES: REAL-TIME CLOCK & ANIMATIONS
@@ -963,37 +406,59 @@ def generate_trend_forecast(df):
         return max(0, min(100, forecast)), trend
     return df['marks'].mean(), 0
 
-# ============================================================================
-# ADVANCED VISUALIZATIONS - WITH SOFT COLORS
-# ============================================================================
-
 def create_gauge_chart(value, title, max_value=100):
-    """Create professional gauge chart with soft colors"""
+    """Create professional gauge chart with BRIGHT colors"""
+
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
         value=value,
-        title={'text': title, 'font': {'size': 22, 'color': '#5a8bb5'}},
-        delta={'reference': 75, 'increasing': {'color': "#8fc9a8"}, 'decreasing': {'color': "#e8aaaa"}},
+        title={'text': title, 'font': {'size': 22, 'color': '#0f172a'}},
+
+        delta={
+            'reference': 75,
+            'increasing': {'color': "#00C853"},   # bright green
+            'decreasing': {'color': "#D50000"}    # strong red
+        },
+
         gauge={
-            'axis': {'range': [None, max_value], 'tickwidth': 1, 'tickcolor': "#8aaec9"},
-            'bar': {'color': "#7acce0"},
+            'axis': {
+                'range': [None, max_value],
+                'tickwidth': 2,
+                'tickcolor': "#0f172a"
+            },
+
+            # 🔥 MAIN BAR (bright cyan-blue)
+            'bar': {'color': "#2962FF"},
+
+            # white base
             'bgcolor': "#ffffff",
-            'borderwidth': 1,
-            'bordercolor': "#d4e6f0",
+
+            'borderwidth': 2,
+            'bordercolor': "#0f172a",
+
+            # 🔥 BRIGHT SEGMENTS (IMPORTANT PART)
             'steps': [
-                {'range': [0, 40], 'color': '#ffe8e8'},
-                {'range': [40, 75], 'color': '#fff8e0'},
-                {'range': [75, 100], 'color': '#e8f8f0'}
+                {'range': [0, 40], 'color': '#FF5252'},   # red
+                {'range': [40, 75], 'color': '#FFB300'},  # amber
+                {'range': [75, 100], 'color': '#00C853'}   # green
             ],
+
             'threshold': {
-                'line': {'color': "#e88a8a", 'width': 3},
-                'thickness': 0.75,
+                'line': {'color': "#D50000", 'width': 4},
+                'thickness': 0.9,
                 'value': 40
             }
         }
     ))
-    fig.update_layout(height=300, margin=dict(l=20, r=20, t=50, b=20), paper_bgcolor='rgba(0,0,0,0)')
-    return fig
+
+    fig.update_layout(
+        height=320,
+        margin=dict(l=20, r=20, t=50, b=20),
+        paper_bgcolor='white',
+        plot_bgcolor='white',
+        font=dict(color="#0f172a")
+    )
+    return apply_theme(fig)
 
 def create_advanced_donut_chart(df):
     """Create advanced donut chart with soft colors"""
@@ -1013,30 +478,30 @@ def create_advanced_donut_chart(df):
     fig.add_trace(go.Pie(
         labels=['Pass', 'Fail'],
         values=[pass_count, fail_count],
-        marker_colors=['#8fc9a8', '#e8aaaa'],
+        marker_colors=["#0E720B", "#CC1D1D"],
         hole=0.4,
         name="Pass/Fail",
         domain={'row': 0, 'column': 0},
         textinfo='percent+label',
         textposition='auto',
-        textfont_color='#5a7d9a'
+        textfont_color="#010c14"
     ), 1, 1)
     
     fig.add_trace(go.Pie(
         labels=['Outstanding', 'Excellent', 'Good', 'Satisfactory', 'Needs Improvement', 'Critical'],
         values=[outstanding, excellent, good, satisfactory, needs_improvement, satisfactory, critical],
-        marker_colors=['#8fc9a8', '#a8d5b8', '#7acce0', '#e8c38a', '#e8aa8a', '#e8aaaa'],
+        marker_colors=["#3F5286", '#FF1744', "#c36dd4", '#e8aaaa'],
         hole=0.5,
         name="Performance Tiers",
         domain={'row': 0, 'column': 1},
         textinfo='percent+label',
         textposition='auto',
-        textfont_color='#5a7d9a'
+        textfont_color="#000b14"
     ), 1, 2)
     
     fig.update_layout(
         title_text="<b>Advanced Performance Analysis</b>",
-        title_font_color='#3a7ca5',
+        title_font_color="#000b14",
         annotations=[
             dict(text='Overall Status', x=0.18, y=0.5, font_size=13, font_color='#5a8bb5', showarrow=False),
             dict(text='Performance Tiers', x=0.82, y=0.5, font_size=13, font_color='#5a8bb5', showarrow=False)
@@ -1045,14 +510,14 @@ def create_advanced_donut_chart(df):
         showlegend=False,
         paper_bgcolor='rgba(0,0,0,0)'
     )
-    return fig
+    return apply_theme(fig)
 
 def create_box_plot(df):
     """Create professional box plot with soft colors"""
     fig = go.Figure()
     
     departments = df['department'].unique()[:8]
-    colors = ['#7acce0', '#8fc9a8', '#e8c38a', '#e8aa8a', '#c5a8e0', '#a8d5e8', '#d4e8a8', '#e8c5a8']
+    colors = ['#7acce0', '#FF5252','#FFB300','#00C853', '#c5a8e0', '#FF5252','#FFB300','#00C853']
     for i, dept in enumerate(departments):
         dept_data = df[df['department'] == dept]['marks']
         fig.add_trace(go.Box(
@@ -1066,7 +531,7 @@ def create_box_plot(df):
     
     fig.update_layout(
         title="<b>Department-wise Performance Distribution</b>",
-        title_font_color='#3a7ca5',
+        title_font_color="#010b11",
         xaxis_title="Department",
         yaxis_title="Marks",
         height=500,
@@ -1075,7 +540,7 @@ def create_box_plot(df):
         paper_bgcolor='rgba(0,0,0,0)',
         font_color='#5a7d9a'
     )
-    return fig
+    return apply_theme(fig)
 
 def create_radar_chart(df):
     """Create radar chart with soft colors"""
@@ -1085,8 +550,7 @@ def create_radar_chart(df):
     dept_stats.columns = ['avg_marks', 'pass_rate', 'distinction_rate']
     dept_stats = dept_stats.head(6)
     
-    colors = ['#7acce0', '#8fc9a8', '#e8c38a', '#e8aa8a', '#c5a8e0', '#a8d5e8']
-    
+    colors = ['#7acce0','#FF5252','#FFB300','#00C853']
     fig = go.Figure()
     
     for i, dept in enumerate(dept_stats.index):
@@ -1105,16 +569,16 @@ def create_radar_chart(df):
         polar=dict(
             radialaxis=dict(visible=True, range=[0, 100], tickfont_color='#5a8bb5'),
             bgcolor='rgba(0,0,0,0)',
-            angularaxis=dict(tickfont_color='#5a8bb5')
+            angularaxis=dict(tickfont_color="#01080f")
         ),
         title="<b>Department Performance Radar Chart</b>",
-        title_font_color='#3a7ca5',
+        title_font_color="#000a10",
         height=500,
         showlegend=True,
         paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#5a7d9a'
+        font_color="#00070c"
     )
-    return fig
+    return apply_theme(fig)
 
 def create_trend_analysis(df):
     """Create trend analysis with confidence bands"""
@@ -1128,7 +592,7 @@ def create_trend_analysis(df):
         mode='lines+markers',
         name='Average Marks',
         line=dict(color='#7acce0', width=3),
-        marker=dict(size=10, color='#e8aa8a'),
+        marker=dict(size=10, color="#984014"),
         error_y=dict(
             type='data',
             array=semester_stats['std'],
@@ -1145,12 +609,12 @@ def create_trend_analysis(df):
         y=p(semester_stats['semester']),
         mode='lines',
         name='Trend Line',
-        line=dict(color='#8fc9a8', width=2, dash='dash')
+        line=dict(color="#680C49", width=2, dash='dash')
     ))
     
     fig.update_layout(
         title="<b>Performance Trend Analysis with Confidence Bands</b>",
-        title_font_color='#3a7ca5',
+        title_font_color="#010a10",
         xaxis_title="Semester",
         yaxis_title="Average Marks",
         height=500,
@@ -1159,7 +623,7 @@ def create_trend_analysis(df):
         paper_bgcolor='rgba(0,0,0,0)',
         font_color='#5a7d9a'
     )
-    return fig
+    return apply_theme(fig)
 
 def create_correlation_heatmap(df):
     """Create correlation heatmap with soft colors"""
@@ -1181,12 +645,12 @@ def create_correlation_heatmap(df):
         
         fig.update_layout(
             title="<b>Feature Correlation Heatmap</b>",
-            title_font_color='#3a7ca5',
+            title_font_color="#010b11",
             height=500,
             width=600,
             paper_bgcolor='rgba(0,0,0,0)'
         )
-        return fig
+        return apply_theme(fig)
     return None
 
 def create_waterfall_chart(df):
@@ -1202,14 +666,14 @@ def create_waterfall_chart(df):
         textposition="outside",
         text=dept_perf.values.round(1),
         textfont_color='#5a7d9a',
-        connector={"line": {"color": "#c5d5e0"}},
-        increasing={"marker": {"color": "#8fc9a8"}},
-        decreasing={"marker": {"color": "#e8aaaa"}}
+        connector={"line": {"color": '#FF5252'}},
+        increasing={"marker": {"color": "#0b5b2e"}},
+        decreasing={"marker": {"color": '#00C853'}}
     ))
     
     fig.update_layout(
         title="<b>Department Performance Waterfall</b>",
-        title_font_color='#3a7ca5',
+        title_font_color="#01090e",
         xaxis_title="Department",
         yaxis_title="Average Marks",
         height=500,
@@ -1217,7 +681,7 @@ def create_waterfall_chart(df):
         paper_bgcolor='rgba(0,0,0,0)',
         font_color='#5a7d9a'
     )
-    return fig
+    return apply_theme(fig)
 
 def create_performance_prediction(df):
     """Create performance prediction visualization"""
@@ -1232,7 +696,7 @@ def create_performance_prediction(df):
         y=list(semester_avg.values) + [forecast],
         mode='lines+markers',
         name='Historical & Forecast',
-        line=dict(color='#7acce0', width=3),
+        line=dict(color="#0c4a59", width=3),
         marker=dict(size=10, color=['#7acce0']*len(semester_avg) + ['#e8c38a'])
     ))
     
@@ -1248,7 +712,7 @@ def create_performance_prediction(df):
     
     fig.update_layout(
         title="<b>Performance Prediction for Next Semester</b>",
-        title_font_color='#3a7ca5',
+        title_font_color="#010e15",
         xaxis_title="Semester",
         yaxis_title="Average Marks",
         height=400,
@@ -1256,7 +720,7 @@ def create_performance_prediction(df):
         paper_bgcolor='rgba(0,0,0,0)',
         font_color='#5a7d9a'
     )
-    return fig, forecast, trend
+    return apply_theme(fig), forecast, trend
 
 # ============================================================================
 # ADVANCED UI COMPONENTS
@@ -1312,13 +776,97 @@ def main():
     clock_placeholder = st.empty()
     
     # Header with live clock
-    st.markdown("""
-                 <div class='main-header'>
-        <h1 style='color: #2c5f8a !important;'>🎓Examination Analytics Dashboard</h1>
-        <p style='font-size: 1.1rem; color: #4a6f8a !important;'>Advanced Analytics & Business Intelligence</p>
-        <p style='font-size: 0.9rem; color: #6a8faa !important;'>Data Science Team 1 | Enterprise Edition</p>
+    st.markdown(
+    f"""
+    <div style='background: white; padding: 2rem 2.5rem; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border-left: 6px solid #4f46e5;'>
+        <div style='display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;'>
+            <span style='
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #4f46e5;
+'>
+    🏛️ Technify University ERP
+</span>
+            <span style='
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4f46e5;
+'>
+    Data Science Team 1
+</span>
+        </div>
+        <h1 style="
+    margin:0;
+    font-size:3rem;
+    font-weight:800;
+    line-height:1.05;
+    letter-spacing:-1px;
+">
+    🎓 <span style="color:#0f172a; font-weight:800;">Examination</span>
+    <span style="
+        background: linear-gradient(90deg, #6366f1, #0ea5e9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight:800;
+    ">Analytics</span><br>
+    <span style="color:#0f172a; font-weight:800;">Dashboard</span>
+</h1>
+        <p style='color: #6a7a8a; margin: 0 0 0.5rem 0; font-size: 1rem; font-weight: 400;'>Examination Analytics — Marks · Performance · Semester · Department · Prediction Insights</p>
+        <div style='display: flex; align-items: center; gap: 12px; flex-wrap: norap; margin-top: 0.5rem; white-space: nowrap;'>
+            <span style='
+    background: #eef3f7;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #4f46e5;
+    font-weight: 500;
+'>
+    📊 Module 3
+</span>
+<span style="
+    display:flex;
+    align-items:center;
+    height:32px;
+    gap:6px;
+    padding:0 14px;
+    background:#eef3f7;
+    border-radius:20px;
+    font-size:0.8rem;
+    color:#4f46e5;
+    font-weight:500;
+    position:relative;
+    top:1px;
+">
+    <span style="
+        width:8px;
+        height:8px;
+        background:#2962FF;
+        border-radius:50%;
+    "></span>
+    Live Data
+</span>
+
+<span style="
+    display:flex;
+    align-items:center;
+    height:32px;
+    padding:0 14px;
+    background:#eef3f7;
+    border-radius:20px;
+    font-size:0.8rem;
+    color:#4f46e5;
+    font-weight:500;
+    position:relative;
+    top:8px;
+">
+    🐘 Supabase PostgreSQL
+        </div>
     </div>
-    """, unsafe_allow_html=True)
+    
+    """,
+    unsafe_allow_html=True
+)
     
     # Live clock display
     with clock_placeholder.container():
@@ -1691,32 +1239,78 @@ def main():
         # Welcome screen
         st.markdown("""
             <div class='info-box' style='text-align: center; margin: 2rem;'>
-                <h2>🎯 Welcome to CBT Examination Analytics Dashboard</h2>
-                <p style='font-size: 1.1rem;'>Advanced Analytics for University Management</p>
+                <h1 style="
+    margin:0;
+    font-size:3rem;
+    font-weight:800;
+    line-height:1.05;
+    letter-spacing:-1px;
+">
+    🎯 <span style="color:#0f172a; font-weight:800;">Welcome to CBT Examination</span><br>
+    <span style="
+        background: linear-gradient(90deg, #6366f1, #0ea5e9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight:800;
+    ">Analytics Dashboard</span>
+</h1>
+
+<p style="
+    color:#6a7a8a;
+    font-size:1rem;
+    font-weight:400;
+    margin-top:10px;
+">
+    Advanced Analytics for University Management
+</p>
                 <br>
-                <h4>✨ Features:</h4>
-                <ul style='text-align: left; display: inline-block;'>
-                    <li>📊 Real-time Pass/Fail Rate Analysis</li>
-                    <li>🏆 Highest/Lowest Marks Tracking</li>
-                    <li>📚 Comprehensive Course Performance</li>
-                    <li>🔮 Predictive Analytics & Forecasting</li>
-                    <li>🎯 Smart Alerts & Recommendations</li>
-                    <li>📈 Advanced Statistical Analysis</li>
-                </ul>
-                <br>
-                <p>👈 Please load data from the sidebar to begin</p>
+                <h4 style="color:#1a2a5e;">✨ Features:</h4>
+
+<ul style="
+    color:#1a2a5e;
+    text-align:left;
+    display:inline-block;
+    font-weight:500;
+">
+    <li>📊 Real-time Pass/Fail Rate Analysis</li>
+    <li>🏆 Highest/Lowest Marks Tracking</li>
+    <li>📚 Comprehensive Course Performance</li>
+    <li>🔮 Predictive Analytics & Forecasting</li>
+    <li>🎯 Smart Alerts & Recommendations</li>
+    <li>📈 Advanced Statistical Analysis</li>
+</ul>
+
+<p style="
+    color:#1a2a5e;
+    font-size:1rem;
+    font-weight:500;
+">
+    👈 Please load data from the sidebar to begin
+</p>
             </div>
         """, unsafe_allow_html=True)
     
     # Footer
-    st.markdown(f"""
-        <div class='footer'>
-            <p><strong>📊 Technify University ERP | Academic Analytics & Business Intelligence</strong></p>
-            <p>Data Science Team 1 | Syeda Samia</p>
-            <p style='font-size: 0.8rem;'>🎯 Empowering data-driven decisions for university management</p>
-            <p style='font-size: 0.75rem; color: #a8c4d8;'>© 2026 Technify | Insights for Excellence</p>
-        </div>
-    """, unsafe_allow_html=True)
-
+    st.markdown("""
+<div class="footer">
+    <div class="footer-title">🏛️ Technify University ERP</div>
+    <div class="footer-sub">Data Science Team 1 &nbsp;·&nbsp; Module 3 — Examination Analytics Dashboard &nbsp;·&nbsp; Powered by Supabase PostgreSQL</div>
+   <div style="margin-top:8px;">
+        <span class="footer-badge">📊 Exam Performance Analytics</span>
+        <span class="footer-badge">📈 Pass/Fail Insights</span>
+        <span class="footer-badge">🎓 Course & Semester Analysis</span>
+        <span class="footer-badge">🏛️ Department Intelligence</span>
+        <span class="footer-badge">🔮 Predictive Analytics</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+    
 if __name__ == "__main__":
     main()
+
+
+
+
+# ---------------------------------------
+
